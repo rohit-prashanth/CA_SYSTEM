@@ -1,0 +1,30 @@
+.docs-container {
+  display: flex;
+  justify-content: center;
+  background-color: #f1f3f4; /* Google Docs background */
+  height: 100vh;
+}
+
+ejs-documenteditorcontainer {
+  flex: 1;
+  min-height: 0; /* ✅ prevents shrinking */
+}
+
+.e-de-ctn {
+  max-width: 1600px; /* Page + margins */
+  background: white;
+  box-shadow: 0px 1px 8px rgba(0, 0, 0, 0.1);
+}
+
+.e-de-ctn-prop-pane {
+  display: none !important; /* Ensure sidebar stays hidden */
+}
+
+.e-de-tool {
+  background: white;
+  border-bottom: 12px solid #ddd;
+}
+
+.e-de-ctn .e-de-document {
+  margin: auto;
+}

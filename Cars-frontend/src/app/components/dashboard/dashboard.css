@@ -1,0 +1,81 @@
+/* Layout wrapper */
+.dashboard-layout {
+  display: flex;
+  align-items: stretch; /* Makes sidebar match content height */
+  min-height: 100vh; /* At least fill the viewport height */
+}
+
+/* Sidebar styles */
+/* .sidebar {
+  width: 250px;
+  background-color: white;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+  
+} */
+
+.sidebar {
+  width: 250px;
+  background-color: white;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+}
+
+.sidebar h6 {
+  font-weight: bold;
+  color: rgba(0, 0, 0, 0.7);
+  margin-bottom: 20px;
+}
+
+/* Remove default list styling */
+.sidebar ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.sidebar li {
+  margin-bottom: 10px;
+}
+
+/* Button-style nav links */
+.sidebar-link {
+  display: block;
+  padding: 12px 16px;
+  background-color: #e6f0fa;
+  color: rgba(0, 0, 0, 0.7);
+  border-radius: 6px;
+  text-decoration: none;
+  text-align: center;
+  font-weight: 500;
+  transition: background-color 0.3s ease;
+}
+
+.sidebar-link:hover {
+  background-color: #0056b3;
+  color: white;
+}
+
+/* Main content area */
+.main-content {
+  flex-grow: 1;
+  padding: 20px;
+  overflow-y: auto;
+}
+/* .main-content {
+  flex-grow: 1;
+  padding: 20px;
+  
+  overflow-y: visible;
+} */
+
+/* Divider line */
+.divider {
+  border-bottom: 1px solid #ccc;
+  margin-top: 10px;
+  margin-bottom: 20px;
+}

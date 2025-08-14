@@ -1,0 +1,93 @@
+# =========================
+# Python / Django
+# =========================
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.pyc
+*.pdb
+*.so
+*.egg
+*.egg-info/
+dist/
+build/
+develop-eggs/
+.eggs/
+.env
+.venv
+cars-env/
+venv/
+ENV/
+env.bak/
+venv.bak/
+
+# Django specific
+*.log
+*.pot
+*.py,cover
+local_settings.py
+db.sqlite3
+db.sqlite3-journal
+media/
+staticfiles/
+static/
+
+# Migrations (optional: keep if you want version control on them)
+*/migrations/__pycache__/
+*/migrations/*.pyc
+*/migrations/*.pyo
+*/migrations/*.pyd
+*/migrations/*.pdb
+*/migrations/*.py,cover
+
+# =========================
+# Angular / Node.js
+# =========================
+Cars-frontend/node_modules/
+bower_components/
+jspm_packages/
+dist/
+tmp/
+temp/
+coverage/
+.angular/
+.angular-cache/
+.angular/config.json
+.angular/cache/
+.angular/dist/
+*.ngsummary.json
+*.tsbuildinfo
+
+# Build outputs
+build/
+out-tsc/
+
+# Environment files
+src/environments/environment*.ts
+
+# =========================
+# General OS & Editor Files
+# =========================
+.DS_Store
+Thumbs.db
+ehthumbs.db
+*.swp
+*.swo
+*.tmp
+*.bak
+*.idea/
+*.vscode/
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+
+# =========================
+# Docker
+# =========================
+*.pid
+*.seed
+*.pid.lock
+docker-compose.override.yml
