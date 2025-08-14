@@ -1,0 +1,23 @@
+.request-detail-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 1rem;
+}
+
+.request-detail-table th,
+.request-detail-table td {
+  border: 1px solid #ccc;
+  padding: 8px 12px;
+}
+
+.request-detail-table th {
+  background-color: #E6F0FA;
+  text-align: left;
+  width: 250px;
+}
+
+.request-detail-table td {
+  background-color: #fff;
+}
+
+/* #f5f5f5; */

@@ -1,0 +1,11 @@
+asgiref==3.9.1
+Django==5.2.4
+django-cors-headers==4.7.0
+django-extensions==4.1
+djangorestframework==3.16.0
+dnspython==2.7.0
+mongoengine==0.29.1
+pymongo==4.13.2
+sqlparse==0.5.3
+typing_extensions==4.14.1
+tzdata==2025.2
