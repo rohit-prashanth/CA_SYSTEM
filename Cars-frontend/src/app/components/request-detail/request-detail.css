@@ -2,6 +2,7 @@
   width: 100%;
   border-collapse: collapse;
   margin-top: 1rem;
+  font-size: small;
 }
 
 .request-detail-table th,

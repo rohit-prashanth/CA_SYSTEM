@@ -68,7 +68,7 @@
 
   <!-- Main content area -->
   <main class="main-content">
-    <nav class="breadcrumb">
+    <!-- <nav class="breadcrumb">
       @for (crumb of breadcrumbs; track $index; let last = $last) { @if (!last)
       {
       <a [routerLink]="crumb.url">{{ crumb.label }}</a>
@@ -77,7 +77,7 @@
       } @if (!last) {
       <span class="separator"> / </span>
       } }
-    </nav>
+    </nav> -->
 
     <router-outlet></router-outlet>
   </main>

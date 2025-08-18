@@ -1,22 +1,239 @@
-.illustration-container {
+/* Layout wrapper */
+.dashboard-layout {
+  display: flex;
+  align-items: stretch;
+  /* min-height: 100vh; */
+  height: 100vh;
+}
+
+/* Sidebar Header: Toggle + Logo */
+/* .sidebar-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 20px;
+  min-height: 40px;
+  justify-content: flex-start;
+} */
+
+.sidebar-header {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 8px;
+  justify-content: flex-start;
+  /* margin-bottom: 10px; */
+  min-height: 40px;
+  width: 100%;
+}
+
+/* When sidebar is collapsed, keep header contents horizontally aligned and centered */
+/* .sidebar.collapsed .sidebar-header {
+  justify-content: center;
+  align-items: center;
+} */
+
+/* Collapsed: header is a column, centered */
+.sidebar.collapsed .sidebar-header {
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start; /* Stacks icons from top */
+  gap: 8px;
+  /* margin-bottom: 10px; */
+  min-height: auto;
+  /* Gives some breathing space */
+}
+
+.sidebar.collapsed .dashboard-logo,
+.sidebar.collapsed .toggle-btn {
+  width: 40px;
+  margin: 0 auto;
+  justify-content: center;
+}
+
+/* Toggle button */
+.toggle-btn {
+  background: none;
+  border: none;
+  font-size: 24px;
+  cursor: pointer;
+  padding: 0;
+  margin: 0;
+  height: 40px;
+  width: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1;
+}
+
+/* Sidebar styles */
+.sidebar {
+  width: 250px;
+  background-color: white;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+  transition: width 0.3s ease;
+  margin-right: 1px;
+  /* overflow: hidden; */
+}
+
+.sidebar.collapsed {
+  width: 70px;
+  padding: 20px 10px;
+}
+
+/* Hide link text when collapsed */
+.sidebar.collapsed .link-text {
+  display: none;
+}
+
+/* Center icons when collapsed */
+.sidebar.collapsed .sidebar-link,
+.sidebar.collapsed .dashboard-logo {
+  justify-content: center;
+  padding: 12px;
+}
+
+/* Dashboard Logo */
+.dashboard-logo {
+  font-weight: bold;
+  color: rgba(0, 0, 0, 0.7);
+  height: 40px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  text-decoration: none;
+  white-space: nowrap;
+  overflow: hidden;
+  position: relative; /* needed for tooltip */
+  transition: transform 0.3s ease, color 0.3s ease;
+  width: auto;
+  margin: 0;
+}
+
+/* Hide dashboard text on collapse - ensure this is set */
+.sidebar.collapsed .dashboard-logo .link-text {
+  display: none;
+}
+
+.dashboard-logo:hover {
+  transform: scale(1.05);
+  color: #0056b3;
+}
+
+.dashboard-logo i {
+  font-size: 22px;
+  min-width: 20px;
   text-align: center;
-  margin: 20px 0;
+  position: relative;
+  top: 0; /* Adjusted from 1px to 0 for better vertical alignment */
+  display: block;
+  line-height: 1;
+  margin: 0;
+  display: flex;
+  align-items: center; /* ensure icon vertically centers */
+  justify-content: center;
 }
 
-.illustration-container img {
-  width: clamp(150px, 50%, 1000px);
-  height: auto;
+/* Section title */
+.sidebar h6 {
+  font-weight: bold;
+  color: rgba(0, 0, 0, 0.7);
+  margin-bottom: 20px;
+  white-space: nowrap;
+  overflow: hidden;
 }
 
-
-.work-in-progress-wrapper {
-  position: fixed;   /* make it stick to the viewport */
-  bottom: 20px;      /* distance from bottom edge */
-  right: 20px;       /* distance from right edge */
-  z-index: 9999;     /* keep it above other elements */
+/* Remove default list styling */
+.sidebar ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
 }
 
-.work-in-progress-wrapper svg {
-  width: clamp(300px, 40%, 800px); /* responsive sizing */
-  height: auto;                    /* keep aspect ratio */
+.sidebar li {
+  margin-bottom: 10px;
+}
+
+/* Nav links */
+.sidebar-link {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 16px;
+  background-color: #e6f0fa;
+  color: rgba(0, 0, 0, 0.7);
+  border-radius: 6px;
+  text-decoration: none;
+  font-weight: 500;
+  transition: background-color 0.3s ease, color 0.3s ease;
+  white-space: nowrap;
+  overflow: hidden;
+  position: relative;
+  font-size: small;
+}
+
+.sidebar-link:hover {
+  background-color: #0056b3;
+  color: white;
+}
+
+.sidebar-link i {
+  font-size: 18px;
+  min-width: 20px;
+  text-align: center;
+}
+
+/* Main content area */
+.main-content {
+  flex-grow: 1;
+  padding: 0px;
+  overflow-y: auto;
+}
+
+/* Divider line */
+.divider {
+  border-bottom: 1px solid #ccc;
+  margin-top: 10px;
+  margin-bottom: 20px;
+}
+
+/* Tooltip styles (only active in collapsed mode) */
+.sidebar.collapsed .sidebar-link::after,
+.sidebar.collapsed .dashboard-logo::after {
+  content: attr(data-tooltip);
+  position: absolute;
+  left: 100%;
+  top: 50%;
+  transform: translateY(-50%);
+  margin-left: 10px;
+  background: #333;
+  color: #fff;
+  padding: 6px 10px;
+  border-radius: 4px;
+  font-size: 12px;
+  opacity: 0;
+  white-space: nowrap;
+  pointer-events: none;
+  transition: opacity 0.2s ease;
+}
+
+.sidebar.collapsed .sidebar-link:hover::after,
+.sidebar.collapsed .dashboard-logo:hover::after {
+  opacity: 1;
+}
+
+.sidebar-link.active-link,
+.dashboard-logo.active-link {
+  background-color: #0056b3 !important;
+  color: #fff !important;
+  font-weight: 600;
+}
+
+.sidebar-link.active-link i,
+.dashboard-logo.active-link i {
+  color: #fff !important;
 }

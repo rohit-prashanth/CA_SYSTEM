@@ -1,4 +1,29 @@
+html, body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+.app-container {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;       /* full viewport height */
+}
+
+app-header {
+  flex-shrink: 0;
+  height: auto;        /* adjust according to your header height */
+}
+
+app-footer {
+  flex-shrink: 0;
+  height: auto;        /* adjust according to your footer height */
+}
+
 .main-content {
-  min-height: calc(100vh - 160px); /* Adjust based on your header/footer height */
-  padding: .5rem;
+  flex-grow: 1;        /* takes all remaining vertical space */
+  overflow-y: auto;    /* allows vertical scrolling if content inside is tall */
+  padding: 0.5rem;
+  box-sizing: border-box;
+  min-height: 0;       /* ensures flex-grow works properly in some browsers */
 }
