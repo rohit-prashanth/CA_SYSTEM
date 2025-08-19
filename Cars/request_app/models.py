@@ -1,7 +1,6 @@
 from django.db import models
 from django.utils import timezone
 
-
 class CCBRequests(models.Model):
     row_id = models.AutoField(primary_key=True)
     change_title = models.CharField(max_length=50)
@@ -339,3 +338,5 @@ class ChangeLog(models.Model):
 
     def __str__(self):
         return f"{self.table_name} - {self.change_action} on {self.change_date}"
+    
+

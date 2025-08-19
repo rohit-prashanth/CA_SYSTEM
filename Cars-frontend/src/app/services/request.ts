@@ -46,4 +46,8 @@ export class RequestService {
   getSubSectionDetail(id: string): Observable<any> {
     return this.http.get(`${this.requestapiUrl}/ccb-requests/${id}`);
   }
+
+  uploadDocument(formData: FormData): Observable<any> {
+    return this.http.post(`${this.requestapiUrl}/ccb-upload-document/`, formData);
+  }
 }

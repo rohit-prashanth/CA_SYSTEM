@@ -33,8 +33,7 @@
   </ejs-documenteditorcontainer>
 </div> -->
 
-
- <!-- <div class="doc-editor-container">
+<!-- <div class="doc-editor-container">
   Top App Bar
   <header class="app-bar">
     <div class="logo">📄 MyDocs</div>
@@ -58,9 +57,8 @@
   </main>
 </div> -->
 
-
-<div class="docs-container">
-  <!-- Toolbar + Editor -->
+<!-- <div class="docs-container">
+  Toolbar + Editor
   <ejs-documenteditorcontainer
     #documentEditor
     height="calc(100vh - 20px)"
@@ -68,5 +66,22 @@
     [enableToolbar]="true"
     [showPropertiesPane]="false"
     style="display:block">
+  </ejs-documenteditorcontainer>
+</div> -->
+
+<div class="docs-container">
+  <!-- Save Button -->
+   <div>
+    <button (click)="saveDoc()" class="btn btn-primary">Save</button>
+    <button (click)="downloadDoc()" class="btn btn-warning">Download</button>
+    <button (click)="cancelDoc()" class="btn btn-danger">Cancel</button>
+   </div>
+
+  <!-- Toolbar + Editor -->
+  <ejs-documenteditorcontainer
+    #documentEditor
+    [enableToolbar]="true"
+    [showPropertiesPane]="false"
+  >
   </ejs-documenteditorcontainer>
 </div>

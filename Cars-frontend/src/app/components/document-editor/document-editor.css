@@ -1,46 +1,37 @@
-/* .docs-container {
-  display: flex;
-  justify-content: center;
-  background-color: #f1f3f4; 
-  Google Docs background 
-  height: 100vh;
-} */
-
 .docs-container {
-  height: 100vh;
-  background-color: #f1f3f4;
+  display: flex;
+  flex-direction: column; /* stack Save button on top of editor */
+  height: 100vh;          /* fill the whole viewport height */
   width: 100%;
-  display: block;
-  /* No justify-content, so content fills area! */
-  /* Optionally add: */
-  padding: 0;
+  background-color: #f1f3f4;
   margin: 0;
+  padding: 0;
   box-sizing: border-box;
 }
 
+/* Make the Save button fixed height */
+.docs-container button {
+  flex: 0 0 auto;
+  margin: 10px;
+}
+
+/* Let editor expand to fill remaining height */
 ejs-documenteditorcontainer {
+  flex: 1 1 auto;
   width: 100%;
-  height: 100%;
-  min-height: 0;
-  min-width: 0;
+  min-height: 0; /* important for flex children to shrink properly */
   display: block;
 }
 
 .e-de-ctn {
-  max-width: 1600px; /* Page + margins */
+  max-width: 1600px; /* keeps page area centered */
+  margin: auto;
   background: white;
   box-shadow: 0px 1px 8px rgba(0, 0, 0, 0.1);
-}
-
-.e-de-ctn-prop-pane {
-  display: none !important; /* Ensure sidebar stays hidden */
+  height: 100%; /* fill inside */
 }
 
 .e-de-tool {
   background: white;
-  border-bottom: 12px solid #ddd;
-}
-
-.e-de-ctn .e-de-document {
-  margin: 0;
+  border-bottom: 1px solid #ddd;
 }
