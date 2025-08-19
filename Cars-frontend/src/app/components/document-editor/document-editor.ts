@@ -5,6 +5,9 @@ import {
   DocumentEditorContainerModule,
 } from '@syncfusion/ej2-angular-documenteditor';
 
+import { RequestService } from '../../services/request';
+import { MatDialog } from '@angular/material/dialog';
+import { ConfirmDialog } from '../confirm-dialog/confirm-dialog';
 // @Component({
 //   selector: 'app-document-editor',
 //   standalone: true,
@@ -51,6 +54,11 @@ export class DocumentEditor implements OnInit {
   @ViewChild('documentEditor', { static: true })
   public documentEditor!: DocumentEditorContainerComponent;
 
+  constructor(
+    private requestService: RequestService,
+    private dialog: MatDialog
+  ) {}
+
   ngOnInit(): void {
     // Load a sample doc on init
     fetch('/assets/sample.docx')
@@ -87,9 +95,46 @@ export class DocumentEditor implements OnInit {
     input.click();
   }
 
+  // saveDoc() {
+  //   // Save to backend or local
+  //   this.documentEditor.documentEditor.save('my-document.docx', 'Docx');
+  // }
+
   saveDoc() {
-    // Save to backend or local
-    this.documentEditor.documentEditor.save('my-document.docx', 'Docx');
+    // Get the .docx Blob from Syncfusion Editor
+    this.documentEditor.documentEditor.saveAsBlob('Docx').then((blob: Blob) => {
+      // Prepare form data
+      const formData = new FormData();
+      formData.append('file', blob, 'my-document.docx');
+
+      // Send to backend via fetch or Angular HttpClient
+      this.requestService.uploadDocument(formData).subscribe({
+        next: (res) => alert('Document uploaded successfully!'),
+        error: (err) => alert('Upload failed: ' + err.message),
+      });
+    });
+  }
+
+  // cancelDoc() {
+  //   const confirmClear = confirm(
+  //     'Are you sure you want to clear the document? This cannot be undone.'
+  //   );
+  //   if (confirmClear) {
+  //     this.documentEditor.documentEditor.openBlank();
+  //   }
+  // }
+
+  cancelDoc() {
+    const dialogRef = this.dialog.open(ConfirmDialog, {
+      width: '400px',
+      disableClose: true,
+    });
+
+    dialogRef.afterClosed().subscribe((result) => {
+      if (result) {
+        this.documentEditor.documentEditor.openBlank();
+      }
+    });
   }
 
   downloadDoc() {

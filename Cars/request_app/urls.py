@@ -9,7 +9,8 @@ from .views import (
     CCBUsersViewSet,
     CCBDecisionsViewSet,
     CCBPrioritiesViewSet,
-    CCBStatusViewSet
+    CCBStatusViewSet,
+    UploadDocView
 )
 
 
@@ -23,9 +24,11 @@ router.register(r"ccb-users", CCBUsersViewSet, basename="ccb-users")
 router.register(r"ccb-decisions", CCBDecisionsViewSet, basename="ccb-decisions")
 router.register(r"ccb-priorities", CCBPrioritiesViewSet, basename="ccb-priorities")
 router.register(r"ccb-status", CCBStatusViewSet, basename="ccb-status")
+# router.register(r"ccb-upload-document", UploadDocView, basename="ccb-upload-document")
 
 urlpatterns = [
     path("", include(router.urls)),
+    path(r"ccb-upload-document/", UploadDocView.as_view(), name="ccb-upload-document"),
 ]
 
 
