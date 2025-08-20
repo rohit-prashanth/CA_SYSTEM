@@ -242,10 +242,10 @@ class CCBSubSections(models.Model):
 class CCBRequestSectionJoin(models.Model):
     row_id = models.AutoField(primary_key=True)
     request = models.ForeignKey(
-        "CCBRequests", on_delete=models.CASCADE, db_column="RequestID"
+        "CCBRequests", on_delete=models.CASCADE, db_column="RequestID", related_name="sections"
     )
     section = models.ForeignKey(
-        "CCBSections", on_delete=models.CASCADE, db_column="SectionID"
+        "CCBSections", on_delete=models.CASCADE, db_column="SectionID", related_name="request_sections"
     )
     is_active = models.BooleanField(default=False)
 
@@ -260,13 +260,13 @@ class CCBRequestSectionJoin(models.Model):
 class CCBRequestSubSectionJoin(models.Model):
     row_id = models.AutoField(primary_key=True)
     request = models.ForeignKey(
-        "CCBRequests", on_delete=models.CASCADE, db_column="RequestID"
+        "CCBRequests", on_delete=models.CASCADE, db_column="RequestID", related_name="subsections"
     )
     section = models.ForeignKey(
-        "CCBSections", on_delete=models.CASCADE, db_column="SectionID"
+        "CCBSections", on_delete=models.CASCADE, db_column="SectionID", related_name="subsections"
     )
     sub_section = models.ForeignKey(
-        "CCBSubSections", on_delete=models.CASCADE, db_column="SubSectionID"
+        "CCBSubSections", on_delete=models.CASCADE, db_column="SubSectionID", related_name="subsection_links"
     )
     is_active = models.BooleanField(default=True)
     content = models.TextField(null=True, blank=True)  # nvarchar(max) → TextField

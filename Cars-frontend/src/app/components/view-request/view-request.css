@@ -9,11 +9,11 @@
 
 /* Sidebar styles */
 .sidebar {
-  min-width: 260px; /* Increase min width for better fit */
+  min-width: 260px; /* fixed width for sidebar */
   max-width: 450px;
-  width: auto;
+  width: 260px;
   background-color: white;
-  padding: 20px;
+  padding: 20px 0 0 0; /* padding-top only to allow toggle alignment */
   display: flex;
   flex-direction: column;
   box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
@@ -23,6 +23,73 @@
   overflow-y: auto; /* Vertical scrolling when needed */
   flex-shrink: 0; /* Prevent sidebar from shrinking */
   box-sizing: border-box;
+  transition: width 0.3s, min-width 0.3s, padding 0.3s;
+  position: relative;
+   padding-top: 52px;    /* At least 32px (button) + 12px top + some gap */
+  z-index: 1;
+}
+
+/* Sidebar collapsed */
+.sidebar.collapsed {
+  width: 48px;         /* Width fits toggle button */
+  min-width: 48px;
+  padding: 0;
+  overflow: visible;
+}
+
+/* Toggle button */
+.sidebar-toggle {
+  /* background: none;
+  border: none;
+  font-size: 24px;
+  cursor: pointer;
+  padding: 0;
+  margin: 0;
+  height: 40px;
+  width: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1; */
+  position: absolute;
+  top: 16px;
+  left: 8px;
+  width: 32px;
+  height: 28px;
+  /* background: #f6f6f8; */
+  background-color: white;
+  /* border: 1px solid #d5dae; */
+  border: none;
+  /* border-radius: 6px; */
+  cursor: pointer;
+  z-index: 2;
+  transition: background 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+}
+
+.sidebar:not(.collapsed) .sidebar-toggle {
+  left: 20px;
+}
+
+/* Collapsed state: button at leftmost edge */
+.sidebar.collapsed .sidebar-toggle {
+  left: 8px;            /* Minimal indent for visibility */
+}
+
+.sidebar-toggle:hover {
+  background: #e6f0fa;
+  border: 1px solid #d5daed ;
+  border-radius: 6px;
+}
+
+/* Hide sidebar content when collapsed */
+.sidebar.collapsed ng-container,
+.sidebar.collapsed .divider,
+.sidebar.collapsed ul {
+  display: none !important;
 }
 
 /* Divider */
@@ -40,6 +107,7 @@
   flex-grow: 1; /* Grow to fill sidebar vertically */
   overflow-y: auto; /* Vertical scroll inside list */
   white-space: normal; /* Wrap text */
+  word-break: break-word; /* Break long words */
 }
 
 /* Individual list items spacing */
@@ -62,6 +130,7 @@
   overflow-wrap: break-word; /* Break long words if needed */
 }
 
+
 .sidebar-link:hover {
   background-color: #0056b3;
   color: white;
@@ -70,9 +139,15 @@
 /* Main content area */
 .main-content {
   flex-grow: 1;
-  padding: 0;
+  padding: 0 12px;
   overflow-y: auto;
-  margin-left: 10px;
+  margin-left: 0;
+  transition: margin 0.3s;
+}
+
+.main-content.full-width {
+  margin-left: 0 !important;
+  padding-left: 12px;
 }
 
 /* Request item styling */
@@ -200,7 +275,6 @@
   .section-item,
   .subsection-item {
     padding: 8px 12px;
-    /* font-size: small; */
   }
 
   .section-item {

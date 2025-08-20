@@ -19,6 +19,30 @@ from .models import (
 )
 
 
+
+class CCBRequestSubSectionJoinSerializer(serializers.ModelSerializer):
+    sub_section_name = serializers.CharField(source="sub_section.sub_section_name")
+
+    class Meta:
+        model = CCBRequestSubSectionJoin
+        fields = ["row_id", "sub_section_name", "content", "is_active"]
+
+
+class CCBRequestSectionJoinSerializer(serializers.ModelSerializer):
+    section_name = serializers.CharField(source="section.section_name")
+    subsections = serializers.SerializerMethodField()
+
+    class Meta:
+        model = CCBRequestSectionJoin
+        fields = ["row_id", "section_name", "is_active", "subsections"]
+
+    def get_subsections(self, obj):
+        subsections = CCBRequestSubSectionJoin.objects.filter(
+            request=obj.request, section=obj.section
+        )
+        return CCBRequestSubSectionJoinSerializer(subsections, many=True).data
+
+
 class CCBRequestsSerializer(serializers.ModelSerializer):
     change_status = serializers.SerializerMethodField()
     it_vertical = serializers.SerializerMethodField()
@@ -33,6 +57,8 @@ class CCBRequestsSerializer(serializers.ModelSerializer):
     arch_recommend = serializers.SerializerMethodField()
     cio_decision = serializers.SerializerMethodField()
     cio_priority = serializers.SerializerMethodField()
+
+    sections = CCBRequestSectionJoinSerializer(many=True, read_only=True)
 
     class Meta:
         model = CCBRequests
@@ -82,6 +108,33 @@ class CCBRequestsSerializer(serializers.ModelSerializer):
         return obj.cio_priority.priority if obj.cio_priority else None
 
 
+    def create(self, validated_data):
+        # create the request record
+        request_instance = CCBRequests.objects.create(**validated_data)
+
+        # get all active sections
+        sections = CCBSections.objects.filter(is_active=True).order_by("sequence")
+
+        for section in sections:
+            section_join = CCBRequestSectionJoin.objects.create(
+                request=request_instance, section=section, is_active=True
+            )
+
+            # get all active subsections for this section
+            subsections = CCBSubSections.objects.filter(section=section, is_active=True).order_by("sequence")
+
+            for subsection in subsections:
+                CCBRequestSubSectionJoin.objects.create(
+                    request=request_instance,
+                    section=section,
+                    sub_section=subsection,
+                    is_active=True,
+                    content=""  # default empty content
+                )
+
+        return request_instance
+
+
 class ITVerticalsSerializer(serializers.ModelSerializer):
     class Meta:
         model = ITVerticals
@@ -128,3 +181,4 @@ class CCBStatusSerializer(serializers.ModelSerializer):
     class Meta:
         model = CCBStatus
         fields = "__all__"
+
