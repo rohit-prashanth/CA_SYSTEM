@@ -16,7 +16,7 @@ import { filter } from 'rxjs/operators';
 export class ViewRequest implements OnInit {
   requests: RequestItem[] = [];
   breadcrumbs: { label: string; url: string }[] = [];
-
+  
   constructor(
     private http: HttpClient,
     private requestService: RequestService,
@@ -33,6 +33,13 @@ export class ViewRequest implements OnInit {
     //   .subscribe(() => {
     //     this.breadcrumbs = this.buildBreadcrumbs();
     //   });
+  }
+
+  
+  sidebarCollapsed = false;  // Sidebar starts expanded
+  // Toggle method
+  toggleSidebar() {
+    this.sidebarCollapsed = !this.sidebarCollapsed;
   }
 
   fetchRequests() {
@@ -206,6 +213,8 @@ export class ViewRequest implements OnInit {
     }
   }
 
+  
+
   selectSubsection(requestId: number, sectionId: number, subsectionId: number) {
     this.requests = this.requests.map((req) =>
       req.id !== requestId
@@ -224,8 +233,10 @@ export class ViewRequest implements OnInit {
                   }
             ),
           }
+      
     );
 
+    this.sidebarCollapsed = true;
     this.router.navigate([
       'view-request',
       'requests',
