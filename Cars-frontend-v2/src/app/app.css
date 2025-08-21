@@ -1,0 +1,23 @@
+html, body {
+  height: 100vh;
+  margin: 0;
+  padding: 0;
+  overflow: hidden; /* no page scroll */
+}
+
+.app-container {
+  display: flex;
+  flex-direction: column;
+  height: 100vh; /* fill viewport */
+  min-height: 0;
+}
+
+/* Main content grows and scrolls internally */
+.main-content {
+  flex-grow: 1;
+  overflow-y: auto;
+  min-height: 0; /* allows flexbox to shrink properly */
+  padding-top: 0.2rem;
+  box-sizing: border-box;
+  background: #fff;
+}

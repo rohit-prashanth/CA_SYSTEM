@@ -1,20 +1,21 @@
 <div class="dashboard-layout">
   <!-- Sidebar -->
   <nav class="sidebar" [class.collapsed]="sidebarCollapsed">
-      <button
+    <button
       class="sidebar-toggle"
       (click)="toggleSidebar()"
       aria-label="Toggle sidebar"
     >
       ☰
-      <!-- @if (!sidebarCollapsed){<span>◀</span>} @if
-      (sidebarCollapsed){<span>▶</span>} -->
+      <!-- 
+      @if (!sidebarCollapsed){<span>◀</span>} 
+      @if (sidebarCollapsed){<span>▶</span>} 
+      -->
     </button>
-    
-    
-    @if (!sidebarCollapsed){
-    <ng-container>
-      <h6 style="font-weight: bold; color: rgba(0, 0, 0, 0.7) ;margin:10px"> ALL REQUESTS</h6>
+
+    <!-- Angular ngIf for expanded sidebar -->
+    <ng-container *ngIf="!sidebarCollapsed">
+      <h6 style="font-weight: bold; color: rgba(0, 0, 0, 0.7); margin:10px">ALL REQUESTS</h6>
       <div class="divider"></div>
 
       <ul class="request-list">
@@ -48,10 +49,8 @@
             >
               <div
                 class="section-title"
-                (click)="
-                  toggleSection(request, section); $event.stopPropagation()
-                "
-                [class.active]="request.active"
+                (click)="toggleSection(request, section); $event.stopPropagation()"
+                [class.active]="section.active"
               >
                 {{ section.name }}
               </div>
@@ -65,12 +64,11 @@
                   *ngFor="let subsection of section.children"
                   class="subsection-item"
                   [class.active]="subsection.active"
-                  (click)="
-                    selectSubsection(request.id, section.id, subsection.id);
-                    $event.stopPropagation()
-                  "
+                  (click)="selectSubsection(request.id, section.id, subsection.id); $event.stopPropagation()"
                 >
                   {{ subsection.name }}
+                  <!-- Optionally display content field -->
+                  <!-- <span class="subsection-content">{{ subsection.content }}</span> -->
                 </li>
               </ul>
             </li>
@@ -78,20 +76,23 @@
         </li>
       </ul>
     </ng-container>
-    }
   </nav>
   <!-- Main content area -->
   <main class="main-content" [class.full-width]="sidebarCollapsed">
-    <!-- <nav class="breadcrumb">
-      @for (crumb of breadcrumbs; track $index; let last = $last) { @if (!last)
-      {
-      <a [routerLink]="crumb.url">{{ crumb.label }}</a>
-      } @else {
-      <span>{{ crumb.label }}</span>
-      } @if (!last) {
-      <span class="separator"> / </span>
-      } }
-    </nav> -->
+    <!-- 
+    <nav class="breadcrumb">
+      @for (crumb of breadcrumbs; track $index; let last = $last) {
+        @if (!last) {
+          <a [routerLink]="crumb.url">{{ crumb.label }}</a>
+        } @else {
+          <span>{{ crumb.label }}</span>
+        }
+        @if (!last) {
+          <span class="separator"> / </span>
+        }
+      }
+    </nav> 
+    -->
     <router-outlet></router-outlet>
   </main>
 </div>

@@ -1,0 +1,250 @@
+<div class="form-container">
+  <div class="container mt-2">
+    <h3 class="text-center" style="font-weight: bold; color: #000000b1">
+      NEW CHANGE REQUEST
+    </h3>
+    <div class="divider"></div>
+  </div>
+
+  <form [formGroup]="form" (ngSubmit)="onSubmit()" class="container" novalidate>
+    <div class="mb-3">
+      <label for="titleOfChange" class="form-label text-label"
+        >Title Of Change</label
+      >
+      <input
+        type="text"
+        class="form-control"
+        id="titleOfChange"
+        formControlName="change_title"
+        placeholder="Title"
+      />
+    </div>
+
+    <div class="mb-3">
+      <label for="executiveSponsor" class="form-label text-label"
+        >Executive Sponsor</label
+      >
+      <input
+        type="text"
+        class="form-control"
+        id="executiveSponsor"
+        formControlName="executive_sponsor"
+        placeholder="Sponsor Name"
+      />
+    </div>
+
+    <div class="mb-3">
+      <label for="proposalDate" class="form-label text-label"
+        >Proposal Date <span style="font-size: small">(MM/DD/YYYY)</span></label
+      >
+      <input
+        type="text"
+        class="form-control proposal-date-input"
+        id="proposalDate"
+        [value]="formattedDate"
+        disabled
+      />
+    </div>
+
+    <div class="mb-3">
+      <label class="form-label text-label">Proposal IT Vertical</label><br />
+
+      @for (vertical of verticals; track vertical.row_id) {
+      <div class="form-check form-check-inline">
+        <input
+          class="form-check-input"
+          type="radio"
+          [id]="'vertical_' + vertical.row_id"
+          [value]="vertical.row_id"
+          formControlName="it_vertical"
+        />
+        <label class="form-check-label" [for]="'vertical_' + vertical.row_id">
+          {{ vertical.it_vertical }}
+        </label>
+      </div>
+      }
+    </div>
+
+    <div class="mb-3">
+      <label class="form-label text-label">Impacting SBU</label><br />
+
+      @for (sbu of sbus; track sbu.row_id) {
+      <div class="form-check form-check-inline">
+        <input
+          class="form-check-input"
+          type="radio"
+          [id]="'sbu_' + sbu.row_id"
+          [value]="sbu.row_id"
+          formControlName="sbu"
+        />
+        <label class="form-check-label" [for]="'sbu_' + sbu.row_id">
+          {{ sbu.business_unit }}
+        </label>
+      </div>
+      }
+    </div>
+
+    <div class="mb-3">
+      <label class="form-label text-label">Scope Of Change</label><br />
+
+      @for (scopes of ccbScopes; track scopes.row_id) {
+      <div class="form-check form-check-inline">
+        <input
+          class="form-check-input"
+          type="radio"
+          [id]="'scopes_' + scopes.row_id"
+          [value]="scopes.row_id"
+          formControlName="scope_of_change"
+        />
+        <label class="form-check-label" [for]="'scopes_' + scopes.row_id">
+          {{ scopes.change_scope }}
+        </label>
+      </div>
+      }
+    </div>
+
+    <div class="mb-3">
+      <label class="form-label text-label">Classification</label><br />
+
+      @for (ccbClass of ccbClassification; track ccbClass.row_id) {
+      <div class="form-check form-check-inline">
+        <input
+          class="form-check-input"
+          type="radio"
+          [id]="'ccbClass_' + ccbClass.row_id"
+          [value]="ccbClass.row_id"
+          formControlName="change_class"
+        />
+        <label class="form-check-label" [for]="'ccbClass_' + ccbClass.row_id">
+          {{ ccbClass.classification }}
+        </label>
+      </div>
+      }
+    </div>
+
+    <div class="mb-3">
+      <label class="form-label text-label">Budgeted?</label><br />
+      <div class="form-check form-check-inline">
+        <input
+          class="form-check-input"
+          type="radio"
+          value="YES"
+          formControlName="budgeted"
+          id="budgetedYes"
+        />
+        <label class="form-check-label" for="budgetedYes">YES</label>
+      </div>
+      <div class="form-check form-check-inline">
+        <input
+          class="form-check-input"
+          type="radio"
+          value="NO"
+          formControlName="budgeted"
+          id="budgetedNo"
+        />
+        <label class="form-check-label" for="budgetedNo">NO</label>
+      </div>
+    </div>
+
+    <div class="mb-3">
+      <label for="budgetValue" class="form-label text-label"
+        >Budget Value</label
+      >
+      <input
+        type="text"
+        class="form-control"
+        id="budgetValue"
+        formControlName="budget_value"
+        placeholder="Eg: 12,34,56,789."
+      />
+    </div>
+
+    <div class="mb-3">
+      <label for="submittedBy" class="form-label text-label"
+        >Submitted By</label
+      >
+      <input
+        type="text"
+        class="form-control"
+        id="submittedBy"
+        formControlName="submitted_by"
+        placeholder="Name"
+      />
+    </div>
+
+    <div class="mb-3">
+      <label for="projectManager" class="form-label text-label"
+        >Project Manager</label
+      >
+      <input
+        type="text"
+        class="form-control"
+        id="projectManager"
+        formControlName="project_manager"
+        placeholder="Name"
+      />
+    </div>
+
+    <!-- Plan Go Live Date -->
+    <div class="mb-3 w-100">
+      <label for="planGoLiveDate" class="form-label text-label d-block mb-1">
+        Plan Go Live Date
+        <span style="font-size: small">(MM/DD/YYYY)</span>
+      </label>
+
+      <mat-form-field appearance="outline" class="w-40">
+        <mat-label>Date</mat-label>
+        <input
+          matInput
+          [matDatepicker]="planPicker"
+          formControlName="plan_go_live_date"
+          placeholder="MM/DD/YYYY"
+          id="planGoLiveDate"
+        />
+        <mat-datepicker-toggle
+          matSuffix
+          [for]="planPicker"
+        ></mat-datepicker-toggle>
+        <mat-datepicker #planPicker></mat-datepicker>
+      </mat-form-field>
+    </div>
+
+    <!-- Actual Go Live Date -->
+    <div class="mb-3 w-100">
+      <label for="actualGoLiveDate" class="form-label text-label d-block mb-1">
+        Actual Go Live Date
+        <span style="font-size: small">(MM/DD/YYYY)</span>
+      </label>
+
+      <mat-form-field appearance="outline" class="w-40">
+        <mat-label>Date</mat-label>
+        <input
+          matInput
+          [matDatepicker]="actualPicker"
+          formControlName="actual_go_live_date"
+          placeholder="MM/DD/YYYY"
+          id="actualGoLiveDate"
+        />
+        <mat-datepicker-toggle
+          matSuffix
+          [for]="actualPicker"
+        ></mat-datepicker-toggle>
+        <mat-datepicker #actualPicker></mat-datepicker>
+      </mat-form-field>
+    </div>
+
+    <hr class="mt-4" />
+
+    <div class="text-end">
+      <button type="submit" class="btn me-2 custom-button">Raise</button>
+      <button
+        type="button"
+        class="btn me-2 custom-cancel-button"
+        (click)="onCancel()"
+      >
+        Cancel
+      </button>
+    </div>
+  </form>
+  <router-outlet></router-outlet>
+</div>

@@ -1,0 +1,54 @@
+/* Container for the entire main content */
+.content {
+  position: relative;       /* Make this the positioning context */
+  width: 100%;
+  max-width: 100%;
+  height: 100%;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 1rem;
+  overflow: hidden;
+}
+
+/* Illustration container styles */
+.illustration-container {
+  text-align: center;
+  /* margin: 20px 0; */
+}
+
+.illustration-container img {
+  width: 150%;
+  height: auto;             /* natural height */
+  display: inline-block;
+}
+
+
+
+/* Responsive adjustments for smaller screens */
+@media (max-width: 768px) {
+  .work-in-progress-wrapper {
+    width: clamp(200px, 60%, 400px);
+    bottom: 15px;
+    right: 15px;
+  }
+
+  .illustration-container img {
+    width: clamp(10px, 60%, 700px);
+  }
+}
+
+@media (max-width: 480px) {
+  .work-in-progress-wrapper {
+    position: relative;     /* stack naturally on smaller screens */
+    width: 100%;
+    bottom: auto;
+    right: auto;
+    margin: 10px 0 0 0;
+  }
+
+  .illustration-container img {
+    width: 100%;
+  }
+}

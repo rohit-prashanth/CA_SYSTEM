@@ -1,0 +1,38 @@
+.docs-container {
+  display: flex;
+  flex-direction: column; /* stack Save button on top of editor */
+  height: 100%;          /* fill the whole viewport height */
+  width: 100%;
+  min-width: 50%;
+  background-color: #f1f3f4;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* Make the Save button fixed height */
+.docs-container button {
+  flex: 0 0 auto;
+  margin: 10px;
+}
+
+/* Let editor expand to fill remaining height */
+ejs-documenteditorcontainer {
+  flex: 1 1 auto;
+  width: 100%;
+  min-height: 0; /* important for flex children to shrink properly */
+  display: block;
+}
+
+.e-de-ctn {
+  max-width: 1600px; /* keeps page area centered */
+  margin: auto;
+  background: white;
+  box-shadow: 0px 1px 8px rgba(0, 0, 0, 0.1);
+  height: 100%; /* fill inside */
+}
+
+.e-de-tool {
+  background: white;
+  border-bottom: 1px solid #ddd;
+}

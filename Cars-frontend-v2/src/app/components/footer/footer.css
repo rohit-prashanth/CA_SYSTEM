@@ -1,0 +1,11 @@
+.custom-footer {
+  background-color: #343a40;
+  color: white;
+  text-align: center;
+  height: 32px;
+}
+
+p {
+  padding: 7px;
+  font-size: 11px;
+}
