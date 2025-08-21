@@ -1,0 +1,41 @@
+.custom-header {
+  background-color: #e6f0fa; /* Bootstrap primary color */
+  color: white;
+  padding: 0.5rem 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  height: 32px;
+}
+
+.logo-title {
+  font-size: 11px; /* Change text size */
+  font-weight: bolder; /* Make it bold */
+  color: rgba(0, 0, 0, 0.7); /* Dark gray text color */
+  letter-spacing: 2px; /* Spacing between letters */
+  text-transform: uppercase; /* Make text uppercase */
+  margin: 0; /* Remove default margin */
+  padding-top: 0px; /* Adjust vertical alignment */
+  /* font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif; */
+}
+
+.logo-icon {
+  height: 28px;
+  width: 80px;
+  margin-right: 1rem;
+  transform: scale(1.7);
+  transition: transform 0.3s ease;
+  padding: 4px;
+  object-fit: contain;
+}
+
+.logo-icon:hover {
+  transform: scale(1.8);
+  transition: transform 0.3s ease;
+}
+
+.logo-container {
+  display: flex;
+  align-items: center;
+}

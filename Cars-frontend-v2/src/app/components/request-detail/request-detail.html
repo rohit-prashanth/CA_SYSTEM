@@ -1,0 +1,106 @@
+<div *ngIf="loading">Loading request details...</div>
+<div *ngIf="error" class="error">{{ error }}</div>
+
+<!-- ===== General Info ===== -->
+<table *ngIf="data" class="request-detail-table">
+  <tbody>
+    <tr>
+      <th>Title of Change</th>
+      <td>{{ data.change_title || "—" }}</td>
+    </tr>
+    <tr>
+      <th>Executive Sponsor</th>
+      <td>{{ data.executive_sponsor || "—" }}</td>
+    </tr>
+    <tr>
+      <th>Proposal Date</th>
+      <td>{{ data.proposal_date ? (data.proposal_date | date:'mediumDate') : "—" }}</td>
+    </tr>
+    <tr>
+      <th>IT Vertical</th>
+      <td>{{ data.it_vertical || "—" }}</td>
+    </tr>
+    <tr>
+      <th>SBU</th>
+      <td>{{ data.sbu || "—" }}</td>
+    </tr>
+    <tr>
+      <th>Scope of Change</th>
+      <td>{{ data.scope_of_change || "—" }}</td>
+    </tr>
+    <tr>
+      <th>Change Class</th>
+      <td>{{ data.change_class || "—" }}</td>
+    </tr>
+    <tr>
+      <th>Budgeted</th>
+      <td>{{ data.budgeted ? "Yes" : "No" }}</td>
+    </tr>
+    <tr>
+      <th>Budget Value</th>
+      <td>{{ data.budget_value | currency:"INR":"symbol":"1.0-0" }}</td>
+    </tr>
+    <tr>
+      <th>Submitted By</th>
+      <td>{{ data.submitted_by || "—" }}</td>
+    </tr>
+    <tr>
+      <th>Project Manager</th>
+      <td>{{ data.project_manager || "—" }}</td>
+    </tr>
+    <tr>
+      <th>Plan Go Live Date</th>
+      <td>{{ data.plan_go_live_date ? (data.plan_go_live_date | date:'mediumDate') : "—" }}</td>
+    </tr>
+    <tr>
+      <th>Actual Go Live Date</th>
+      <td>{{ data.actual_go_live_date ? (data.actual_go_live_date | date:'mediumDate') : "—" }}</td>
+    </tr>
+  </tbody>
+</table>
+
+<!-- ===== Assessment Info ===== -->
+<table *ngIf="data" class="request-detail-table">
+  <tbody>
+    <tr>
+      <th>Assessment Date</th>
+      <td>{{ data.proposal_assessed_date ? (data.proposal_assessed_date | date:'mediumDate') : "—" }}</td>
+    </tr>
+    <tr>
+      <th>Assessed By</th>
+      <td>{{ data.proposal_assessed_by || "—" }}</td>
+    </tr>
+    <tr>
+      <th>Proposal Recommendation</th>
+      <td>{{ data.proposal_recommend || "—" }}</td>
+    </tr>
+  </tbody>
+</table>
+
+<!-- ===== Architecture Info ===== -->
+<table *ngIf="data" class="request-detail-table">
+  <tbody>
+    <tr>
+      <th>Arch Assessed By</th>
+      <td>{{ data.arch_assessed_by || "—" }}</td>
+    </tr>
+    <tr>
+      <th>Arch Recommend</th>
+      <td>{{ data.arch_recommend || "—" }}</td>
+    </tr>
+  </tbody>
+</table>
+
+<!-- ===== CIO Decision Info ===== -->
+<table *ngIf="data" class="request-detail-table">
+  <tbody>
+    <tr>
+      <th>CIO Decision</th>
+      <td>{{ data.cio_decision || "—" }}</td>
+    </tr>
+    <tr>
+      <th>CIO Priority</th>
+      <td>{{ data.cio_priority || "—" }}</td>
+    </tr>
+  </tbody>
+</table>
