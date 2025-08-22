@@ -1,87 +1,20 @@
-<!-- <div class="doc-editor-wrapper">
-  Custom header
-  <header class="doc-editor-header">
-    <div class="logo">
-      <img src="assets/logo.svg" alt="Logo" />
-      <span>My Docs</span>
-    </div>
-    <div class="actions">
-      <button class="btn" (click)="openDoc()">Open</button>
-      <button class="btn primary" (click)="saveDoc()">Save</button>
-      <button class="btn" (click)="downloadDoc()">Download</button>
-    </div>
-  </header>
-
-  Document Editor Container
-  <div class="doc-editor-body">
-    <ejs-documenteditorcontainer
-      #documentEditor
-      height="100%"
-      [enableToolbar]="true"
-      style="display:block; border-radius: 8px; overflow: hidden;">
-    </ejs-documenteditorcontainer>
-  </div>
-</div> -->
-
-<!-- <div class="document-editor-wrapper">
-  <ejs-documenteditorcontainer
-    #documentEditor
-    [enableToolbar]="true"
-    height="100%"
-    width="100%"
-    style="display: block">
-  </ejs-documenteditorcontainer>
-</div> -->
-
-<!-- <div class="doc-editor-container">
-  Top App Bar
-  <header class="app-bar">
-    <div class="logo">📄 MyDocs</div>
-    <div class="actions">
-      <button class="btn primary">Save</button>
-      <button class="btn">Download</button>
-    </div>
-  </header>
-
-  Editor Area
-  <main class="editor-area">
-    <div class="doc-wrapper">
-      <ejs-documenteditorcontainer
-        #documentEditor
-        [enableToolbar]="true"
-        height="100%"
-        width="100%"
-        style="display:block">
-      </ejs-documenteditorcontainer>
-    </div>
-  </main>
-</div> -->
-
-<!-- <div class="docs-container">
-  Toolbar + Editor
-  <ejs-documenteditorcontainer
-    #documentEditor
-    height="calc(100vh - 20px)"
-    width="100%"
-    [enableToolbar]="true"
-    [showPropertiesPane]="false"
-    style="display:block">
-  </ejs-documenteditorcontainer>
-</div> -->
-
 <div class="docs-container">
   <!-- Save Button -->
-   <div>
-    <button (click)="saveDoc()" class="btn btn-primary">Save</button>
-    <button (click)="downloadDoc()" class="btn btn-warning">Download</button>
-    <button (click)="cancelDoc()" class="btn btn-danger">Cancel</button>
-   </div>
+  <div class="button-container">
+    <button (click)="saveDoc()" class="btn custom-button">Save</button>
+    <!-- <button (click)="downloadDoc()" class="btn me-2 custom-button">Download</button>  -->
+    <!-- <button (click)="openDoc()" class="btn custom-button">Open</button> -->
+    <button (click)="cancelDoc()" class="btn custom-cancel-button">
+      Cancel
+    </button>
+  </div>
 
   <!-- Toolbar + Editor -->
   <ejs-documenteditorcontainer
     #documentEditor
     [enableToolbar]="true"
     [showPropertiesPane]="false"
+    (created)="onEditorCreated()"
   >
   </ejs-documenteditorcontainer>
 </div>

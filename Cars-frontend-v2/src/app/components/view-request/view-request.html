@@ -1,65 +1,82 @@
 <div class="dashboard-layout">
   <!-- Sidebar -->
   <nav class="sidebar" [class.collapsed]="sidebarCollapsed">
-    <!-- <button
-      class="sidebar-toggle"
-      (click)="toggleSidebar()"
-      aria-label="Toggle sidebar"
-      type="button"
-    > ☰ </button> -->
     <div class="sidebar-header">
       <i class="fa-solid fa-bars toggle-btn" (click)="toggleSidebar()"></i>
-      <!-- <button class="toggle-btn" (click)="toggleSidebar()"><i class="fa-solid fa-bars"></i></button> -->
     </div>
 
     <ng-container *ngIf="!sidebarCollapsed">
       <h6 class="all-requests-title">ALL REQUESTS</h6>
       <div class="sidebar-divider"></div>
       <ul class="request-list">
-        <li *ngFor="let request of requests" class="request-item" [class.active]="request.active">
-          <div 
-            class="request-title" 
-            (click)="toggleRequest(request)" 
-            [class.active]="request.active">
-            <img 
+        <li
+          *ngFor="let request of requests"
+          class="request-item"
+          [class.active]="request.active"
+        >
+          <div
+            class="request-title"
+            (click)="toggleRequest(request)"
+            [class.active]="request.active"
+          >
+            <img
               [src]="'assets/icons/' + getStatusIconFileName(request.status)"
               alt="{{ request.status }} icon"
               class="status-icon"
             />
-            <span class="request-name">{{ request.name }}</span>
+            <span
+              class="request-name"
+              [matTooltip]="request.name"
+              matTooltipPosition="right"
+              >{{ request.name }}</span
+            >
             <span class="arrow" *ngIf="request.sections?.length">
-              <i 
-                class="fa" 
+              <i
+                class="fa"
                 [ngClass]="{
                   'fa-chevron-down': request.expanded,
                   'fa-chevron-right': !request.expanded
-                }">
+                }"
+              >
               </i>
             </span>
           </div>
           <ul class="section-list" *ngIf="request.expanded">
-            <li *ngFor="let section of request.sections" class="section-item" [class.active]="section.active">
-              <div 
+            <li
+              *ngFor="let section of request.sections"
+              class="section-item"
+              [class.active]="section.active"
+            >
+              <div
                 class="section-title"
-                (click)="toggleSection(request, section); $event.stopPropagation()"
-                [class.active]="section.active">
+                (click)="
+                  toggleSection(request, section); $event.stopPropagation()
+                "
+                [class.active]="section.active"
+              >
                 <span class="section-dot"></span>
                 {{ section.name }}
                 <span class="arrow" *ngIf="section.children?.length">
-                  <i 
-                    class="fa" 
+                  <i
+                    class="fa"
                     [ngClass]="{
                       'fa-chevron-down': section.expanded,
                       'fa-chevron-right': !section.expanded
-                    }">
+                    }"
+                  >
                   </i>
                 </span>
               </div>
               <ul class="subsection-list" *ngIf="section.expanded">
-                <li *ngFor="let subsection of section.children" 
-                    class="subsection-item" 
-                    [class.active]="subsection.active"
-                    (click)="selectSubsection(request.id, section.id, subsection.id); $event.stopPropagation()">
+                <li
+                  *ngFor="let subsection of section.children"
+                  class="subsection-item"
+                  [class.active]="subsection.active"
+                  (click)="
+                    selectSubsection(request.id, section.id, subsection.id);
+                    $event.stopPropagation()
+                  "
+                >
                   {{ subsection.name }}
                 </li>
               </ul>

@@ -11,17 +11,23 @@ import { HttpClient } from '@angular/common/http';
 import { RequestService } from '../../services/request';
 import { RequestItem, Section, staticSections } from './sections.data';
 import { filter } from 'rxjs/operators';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 @Component({
   selector: 'app-view-request',
   standalone: true,
-  imports: [CommonModule, RouterOutlet, RouterLink],
+  imports: [CommonModule, RouterOutlet, RouterLink, MatTooltipModule],
   templateUrl: './view-request.html',
   styleUrls: ['./view-request.css'],
 })
 export class ViewRequest implements OnInit {
   requests: RequestItem[] = [];
   breadcrumbs: { label: string; url: string }[] = [];
+  selectedSubsection: {
+    requestId: number;
+    sectionId: number;
+    subsectionId: number;
+  } | null = null;
 
   constructor(
     private http: HttpClient,
@@ -46,77 +52,6 @@ export class ViewRequest implements OnInit {
   toggleSidebar() {
     this.sidebarCollapsed = !this.sidebarCollapsed;
   }
-
-  // fetchRequests() {
-  //   this.requestService.getCCBRequests().subscribe({
-  //     next: (res: any[]) => {
-  //       this.requests = res.map((req) => ({
-  //         id: req.row_id,
-  //         name: req.change_title,
-  //         status: req.change_status,
-  //         expanded: false,
-  //         sections: JSON.parse(JSON.stringify(staticSections)),
-  //       }));
-  //       // Rebuild breadcrumbs after data arrives
-  //       // this.breadcrumbs = this.buildBreadcrumbs();
-  //     },
-  //     error: (err) => {
-  //       console.error('Failed to load requests', err);
-  //     },
-  //   });
-  // }
-
-  // /** 🧩 Build breadcrumb array based on URL params and request/section names */
-  // private buildBreadcrumbs(): { label: string; url: string }[] {
-  //   const crumbs: { label: string; url: string }[] = [];
-  //   const rootUrl = '/view-request';
-  //   crumbs.push({ label: 'All Requests', url: rootUrl });
-
-  //   const params = this.route.snapshot.firstChild?.params || {};
-  //   const requestId = Number(params['id']);
-  //   const sectionId = Number(this.route.snapshot.firstChild?.firstChild?.params['sectionId']);
-  //   const subsectionId = Number(
-  //     this.route.snapshot.firstChild?.firstChild?.firstChild?.params['subsectionId']
-  //   );
-
-  //   // Add request name
-  //   if (requestId) {
-  //     const req = this.requests.find((r) => r.id === requestId);
-  //     if (req) {
-  //       crumbs.push({
-  //         label: req.name,
-  //         url: `${rootUrl}/requests/${req.id}`,
-  //       });
-  //     }
-  //   }
-
-  //   // Add section name
-  //   if (requestId && sectionId) {
-  //     const req = this.requests.find((r) => r.id === requestId);
-  //     const sec = req?.sections.find((s) => s.id === sectionId);
-  //     if (sec) {
-  //       crumbs.push({
-  //         label: sec.name,
-  //         url: `${rootUrl}/requests/${requestId}/sections/${sectionId}`,
-  //       });
-  //     }
-  //   }
-
-  //   // Add subsection name
-  //   if (requestId && sectionId && subsectionId) {
-  //     const req = this.requests.find((r) => r.id === requestId);
-  //     const sec = req?.sections.find((s) => s.id === sectionId);
-  //     const sub = sec?.children.find((c) => c.id === subsectionId);
-  //     if (sub) {
-  //       crumbs.push({
-  //         label: sub.name,
-  //         url: `${rootUrl}/requests/${requestId}/sections/${sectionId}/subsections/${subsectionId}`,
-  //       });
-  //     }
-  //   }
-
-  //   return crumbs;
-  // }
 
   fetchRequests() {
     this.requestService.getCCBRequests().subscribe({
@@ -213,28 +148,91 @@ export class ViewRequest implements OnInit {
         sections: req.sections.map((sec) => {
           if (sec.id === section.id) {
             const newExpanded = !sec.expanded;
+
+            if (!newExpanded) {
+              // ✅ If collapsing currently active section → clear activeness
+              if (sec.active) {
+                this.router.navigate(['/view-request', 'requests', request.id]);
+                return {
+                  ...sec,
+                  expanded: false,
+                  active: false,
+                  children: sec.children.map((sub) => ({
+                    ...sub,
+                    active: false,
+                  })),
+                };
+              }
+
+              // ✅ If collapsing non-active section → do nothing special
+              return {
+                ...sec,
+                expanded: false,
+              };
+            }
+
+            // ✅ Expanding
             return {
               ...sec,
-              expanded: newExpanded,
-              active: newExpanded,
-              children: sec.children.map((sub) => ({
-                ...sub,
-                active: newExpanded ? sub.active : false,
-              })),
+              expanded: true,
+              // If already another active section exists, don’t make this active
+              active: sec.active || false,
             };
           }
+
+          // Collapse other sections, keep their active/subsection state intact
           return {
             ...sec,
             expanded: false,
-            active: false,
-            children: sec.children.map((sub) => ({
-              ...sub,
-              active: false,
-            })),
           };
         }),
       };
     });
+  }
+
+  selectSubsection(requestId: number, sectionId: number, subsectionId: number) {
+    this.requests = this.requests.map((req) =>
+      req.id !== requestId
+        ? req
+        : {
+            ...req,
+            sections: req.sections.map((sec) => {
+              if (sec.id === sectionId) {
+                // ✅ clicked subsection under this section
+                return {
+                  ...sec,
+                  expanded: true,
+                  active: true, // parent section active
+                  children: sec.children.map((sub) => ({
+                    ...sub,
+                    active: sub.id === subsectionId,
+                  })),
+                };
+              }
+
+              // ✅ all other sections/subsections → inactive
+              return {
+                ...sec,
+                expanded: false,
+                active: false,
+                children: sec.children.map((sub) => ({
+                  ...sub,
+                  active: false,
+                })),
+              };
+            }),
+          }
+    );
+
+    this.router.navigate([
+      'view-request',
+      'requests',
+      requestId,
+      'sections',
+      sectionId,
+      'subsections',
+      subsectionId,
+    ]);
   }
 
   getStatusIconFileName(status: string): string {
@@ -254,37 +252,5 @@ export class ViewRequest implements OnInit {
       default:
         return 'help-outline.svg';
     }
-  }
-
-  selectSubsection(requestId: number, sectionId: number, subsectionId: number) {
-    this.requests = this.requests.map((req) =>
-      req.id !== requestId
-        ? req
-        : {
-            ...req,
-            sections: req.sections.map((sec) =>
-              sec.id !== sectionId
-                ? sec
-                : {
-                    ...sec,
-                    children: sec.children.map((sub) => ({
-                      ...sub,
-                      active: sub.id === subsectionId,
-                    })),
-                  }
-            ),
-          }
-    );
-
-    this.sidebarCollapsed = true;
-    this.router.navigate([
-      'view-request',
-      'requests',
-      requestId,
-      'sections',
-      sectionId,
-      'subsections',
-      subsectionId,
-    ]);
   }
 }
