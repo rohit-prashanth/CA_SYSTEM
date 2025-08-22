@@ -15,10 +15,12 @@
   background-color: #E6F0FA;
   text-align: left;
   width: 250px;
+  color: rgba(0, 0, 0, 0.7);
 }
 
 .request-detail-table td {
   background-color: #fff;
+  color: rgba(0, 0, 0, 1);
 }
 
 /* #f5f5f5; */

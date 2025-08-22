@@ -1,14 +1,15 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, RouterOutlet } from '@angular/router';
 import { Subject, takeUntil } from 'rxjs';
 import { RequestService } from '../../services/request';
 import { DocumentEditor } from '../document-editor/document-editor';
 
+
 @Component({
   selector: 'app-subsection-detail',
   standalone: true,
-  imports: [CommonModule,DocumentEditor],
+  imports: [CommonModule, DocumentEditor],
   // template: `
   //   <div *ngIf="loading">Loading...</div>
   //   <div *ngIf="error" class="error">{{ error }}</div>

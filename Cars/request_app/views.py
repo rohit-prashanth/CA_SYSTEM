@@ -38,7 +38,7 @@ from rest_framework import status
 from django.conf import settings
 import requests
 from rest_framework.decorators import action
-
+from django.http import FileResponse, Http404
 
 class CCBRequestsViewSet(viewsets.ModelViewSet):
     # queryset = CCBRequests.objects.all()
@@ -90,6 +90,20 @@ class CCBStatusViewSet(viewsets.ModelViewSet):
 
 
 class UploadDocView(APIView):
+
+    def get(self, request, *args, **kwargs):
+
+        path = os.path.join(settings.MEDIA_ROOT, "documents")
+        file_name = "temp.docx"
+        file_path = os.path.join(path, file_name)
+
+        if not os.path.exists(file_path):
+            raise Http404("File not found")
+
+        response = FileResponse(open(file_path, "rb"), content_type="application/vnd.openxmlformats-officedocument.wordprocessingml.document")
+        response["Content-Disposition"] = 'attachment; filename="sample.docx"'
+        return response
+
     @staticmethod
     def upload_file_to_onedrive(local_filepath, remote_filename):
         access_token = "YOUR_MICROSOFT_GRAPH_ACCESS_TOKEN"

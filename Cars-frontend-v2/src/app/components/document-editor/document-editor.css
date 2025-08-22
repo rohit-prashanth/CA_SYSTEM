@@ -1,10 +1,10 @@
 .docs-container {
   display: flex;
   flex-direction: column; /* stack Save button on top of editor */
-  height: 100%;          /* fill the whole viewport height */
+  height: 100%; /* fill the whole viewport height */
   width: 100%;
   min-width: 50%;
-  background-color: #f1f3f4;
+  /* background-color: #f1f3f4; */
   margin: 0;
   padding: 0;
   box-sizing: border-box;
@@ -13,7 +13,52 @@
 /* Make the Save button fixed height */
 .docs-container button {
   flex: 0 0 auto;
-  margin: 10px;
+  margin: 10px 0px 10px 0px;
+}
+
+button.custom-button,
+button.custom-cancel-button {
+  min-width: 60px;
+  padding: 0.5rem 1.4rem;
+  font-weight: 600;
+  font-size: 1rem;
+  border-radius: 5px;
+  border: none;
+  transition: background-color 0.3s ease, color 0.3s ease;
+  cursor: pointer;
+}
+
+button.custom-button {
+  background-color: #e6f0fa;
+  color: rgba(0, 0, 0, 0.7);
+}
+
+button.custom-button:hover {
+  background-color: #81b8f0;
+  color: white;
+}
+
+button.custom-cancel-button {
+  background-color: transparent;
+  color: #666;
+  border: 1.5px solid #ccc;
+}
+
+button.custom-cancel-button:hover {
+  background-color: #f5f5f5;
+  border-color: #999;
+  color: #333;
+}
+
+.button-container button {
+  padding: 10px;
+  font-size: 11px;
+  margin-left: 10px;
+}
+
+.button-container {
+  justify-content: flex-end;
+  display: flex;
 }
 
 /* Let editor expand to fill remaining height */
