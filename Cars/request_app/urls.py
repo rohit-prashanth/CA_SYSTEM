@@ -10,7 +10,9 @@ from .views import (
     CCBDecisionsViewSet,
     CCBPrioritiesViewSet,
     CCBStatusViewSet,
-    UploadDocView
+    UploadDocView,
+    import_doc,
+    export_doc
 )
 
 
@@ -29,8 +31,10 @@ router.register(r"ccb-status", CCBStatusViewSet, basename="ccb-status")
 urlpatterns = [
     path("", include(router.urls)),
     path(r"ccb-docx/", UploadDocView.as_view(), name="ccb-docx"),
+    path("import/<str:filename>/", import_doc, name="import_doc"),
+    path("export/", export_doc, name="export_doc"),
 ]
-
+    
 
 """
 GET /api/requests/  List all CCB requests

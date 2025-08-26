@@ -44,7 +44,7 @@ export class RequestService {
   }
 
   getSubSectionDetail(id: string): Observable<any> {
-    return this.http.get(`${this.requestapiUrl}/ccb-requests/${id}`);
+    return this.http.get(`${this.requestapiUrl}/ccb-requests/${id}/`);
   }
 
   uploadDocument(formData: FormData): Observable<any> {
@@ -53,5 +53,13 @@ export class RequestService {
 
   readDocument(): Observable<any> {
     return this.http.get(`${this.requestapiUrl}/ccb-docx/`,{ responseType: 'blob' });
+  }
+
+  importDocument(filename: string): Observable<any> {
+    return this.http.get(`${this.requestapiUrl}/import/${filename}/`);
+  }
+
+  exportDocument(filename: string, html: string): Observable<any> {
+    return this.http.post(`${this.requestapiUrl}/export/`, { filename, html });
   }
 }

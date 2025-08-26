@@ -20,6 +20,7 @@
   },
   "private": true,
   "dependencies": {
+    "@angular/animations": "^20.1.4",
     "@angular/cdk": "^20.1.5",
     "@angular/common": "^20.1.0",
     "@angular/compiler": "^20.1.0",
@@ -39,6 +40,10 @@
     "@syncfusion/ej2-file-utils": "^30.2.4",
     "bootstrap": "^5.3.7",
     "jquery": "^3.7.1",
+    "ngx-quill": "^28.0.1",
+    "quill": "^2.0.3",
+    "quill-better-table": "^1.2.10",
+    "quill-image-resize-module": "^3.0.0",
     "rxjs": "~7.8.0",
     "tslib": "^2.3.0",
     "zone.js": "~0.15.0"

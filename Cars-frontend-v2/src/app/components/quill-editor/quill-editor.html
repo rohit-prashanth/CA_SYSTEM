@@ -1,0 +1,25 @@
+<div class="editor-container">
+  <!-- Top Action Bar -->
+  <div class="editor-actions">
+    <button type="button" class="btn-save" (click)="saveDoc()">Save</button>
+    <!-- <button (click)="saveDoc()" class="btn custom-button">Save</button>
+    <button (click)="cancelDoc()" class="btn custom-cancel-button">Cancel</button> -->
+  </div>
+
+  <!-- Quill Editor -->
+  <div class="editor-wrapper">
+    <quill-editor
+      [(ngModel)]="content"
+      class="custom-quill"
+      (onEditorCreated)="onEditorCreated($event)"
+    >
+    </quill-editor>
+  </div>
+
+  <!-- Success/Error Messages -->
+  <div *ngIf="message" class="alert" [ngClass]="messageType">
+    {{ message }}
+  </div>
+
+  <router-outlet></router-outlet>
+</div>

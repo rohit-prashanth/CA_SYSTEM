@@ -21,3 +21,17 @@ html, body {
   box-sizing: border-box;
   background: #fff;
 }
+
+.resizable-image-wrapper {
+  display: inline-block;
+  max-width: 100%;
+  resize: both;       /* native drag handle */
+  overflow: hidden;
+  border: 1px dashed #ccc; /* optional border */
+}
+
+.resizable-image-wrapper img {
+  width: 100%;
+  display: block;
+  pointer-events: none; /* so the wrapper handles mouse drag */
+}

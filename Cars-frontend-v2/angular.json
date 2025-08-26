@@ -31,7 +31,9 @@
               "./node_modules/@syncfusion/ej2-popups/styles/material.css",
               "./node_modules/@syncfusion/ej2-splitbuttons/styles/material.css",
               "./node_modules/@syncfusion/ej2-lists/styles/material.css",
-              "./node_modules/@syncfusion/ej2-angular-documenteditor/styles/material.css"
+              "./node_modules/@syncfusion/ej2-angular-documenteditor/styles/material.css",
+              "node_modules/quill/dist/quill.snow.css",
+              "node_modules/quill/dist/quill.bubble.css"
             ],
             "scripts": ["./node_modules/bootstrap/dist/js/bootstrap.js"]
           },

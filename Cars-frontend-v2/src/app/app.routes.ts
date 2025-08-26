@@ -6,6 +6,7 @@ import { SubsectionDetail } from './components/subsection-detail/subsection-deta
 import { RequestDetail } from './components/request-detail/request-detail';
 import { DocumentEditor } from './components/document-editor/document-editor';
 import { MainLayout } from './components/main-layout/main-layout';
+import { QuillEditor } from './components/quill-editor/quill-editor';
 
 
 export const routes: Routes = [
@@ -27,7 +28,8 @@ export const routes: Routes = [
           },
         ],
       },
-      { path: 'editor', component: DocumentEditor }
+      { path: 'editor', component: DocumentEditor },
+      { path: 'quill-editor', component: QuillEditor }
     ]
   }
 ];
