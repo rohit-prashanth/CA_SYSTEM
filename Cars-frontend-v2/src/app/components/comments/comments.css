@@ -1,0 +1,133 @@
+.comments-layout {
+  display: flex;
+  gap: 0.5rem; /* space between comments and attachments */
+  align-items: flex-start; /* align to top */
+  margin-top: 1rem;
+}
+
+/* Right: attachments */
+.attachments-container {
+  flex: 1; /* take less space */
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  max-width: 320px; /* optional: fixed max width */
+  border: 1px solid rgba(0, 0, 0, 0.2);
+  background: #fff;
+  height: 500px;
+  flex-direction: column;
+  display: flex;
+}
+
+/* ===========================
+   Container
+=========================== */
+.comments-container {
+  flex: 2; /* take more space */
+  /* max-width: 700px; */
+  /* margin: 2rem auto; */
+  padding: 1.5rem;
+  background: #fff;
+  /* border-radius: 12px; */
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  font-family: "Segoe UI", Roboto, sans-serif;
+  display: flex;
+  flex-direction: column;
+  height: 500px; /* 👈 fixed height for entire section */
+  border: 1px solid rgba(0, 0, 0, 0.2);
+  /* border: 1px solid #e0e0e0; */
+}
+
+.comments-title {
+  font-size: medium;
+  font-weight: 600;
+  margin-bottom: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: rgba(0, 0, 0, 0.7);
+}
+
+.count-badge {
+  background-color: #fff; /* white background */
+  color: rgba(0, 0, 0, 0.7); /* black text */
+  border: 2px solid rgba(0, 0, 0, 0.7); /* black border */
+  border-radius: 50%; /* make it round */
+  width: 22px; /* fixed size circle */
+  height: 22px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: small;
+  font-weight: 600;
+}
+
+.comments-scroll {
+  flex: 1; /* takes all available space */
+  overflow-y: auto; /* 👈 enable scrolling */
+  padding-right: 8px;
+  margin-bottom: 15px;
+}
+
+/* Optional: nice thin scrollbar */
+.comments-scroll::-webkit-scrollbar {
+  width: 2px;
+}
+.comments-scroll::-webkit-scrollbar-thumb {
+  background: #ccc;
+  border-radius: 3px;
+}
+.comments-scroll::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+/* ===========================
+   Input Areas
+=========================== */
+.comment-input {
+  width: 100%;
+  padding: 0.7rem 0.9rem;
+  margin: 0.3rem 0;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-size: small;
+  resize: vertical;
+  min-height: 48px;
+  font-family: inherit;
+}
+
+.comment-input:focus {
+  outline: none;
+  border-color: #81b8f0;
+  box-shadow: 0 0 4px rgba(0, 120, 255, 0.3);
+}
+
+.comment-btn {
+  background: #0078ff8f;
+  color: rgba(0, 0, 0, 0.9);
+  font-weight: 500;
+  font-size: 0.9rem;
+  padding: 0.5rem 1rem;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.comment-btn:hover {
+  background: #81b8f0;
+  color: white;
+}
+
+.comment-btn.small {
+  padding: 0.3rem 0.8rem;
+  font-size: 0.8rem;
+}
+
+/* ===========================
+   New Comment Form
+=========================== */
+.comment-form {
+  /* margin-top: 1.5rem; */
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}

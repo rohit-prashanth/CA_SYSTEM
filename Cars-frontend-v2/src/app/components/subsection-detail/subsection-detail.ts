@@ -5,11 +5,12 @@ import { Subject, takeUntil } from 'rxjs';
 import { RequestService } from '../../services/request';
 import { DocumentEditor } from '../document-editor/document-editor';
 import { QuillEditor } from '../quill-editor/quill-editor';
+import { Comments } from "../comments/comments";
 
 @Component({
   selector: 'app-subsection-detail',
   standalone: true,
-  imports: [CommonModule, DocumentEditor, QuillEditor],
+  imports: [CommonModule, DocumentEditor, QuillEditor, Comments],
   // template: `
   //   <div *ngIf="loading">Loading...</div>
   //   <div *ngIf="error" class="error">{{ error }}</div>

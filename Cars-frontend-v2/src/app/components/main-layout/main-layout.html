@@ -1,9 +1,69 @@
-<div class="dashboard-layout">
+<!-- Loader while validating
+<div *ngIf="loading" class="loading-container">
+  <div class="spinner"></div>
+  <p>Validating user, please wait...</p>
+</div> -->
+
+<!-- Dashboard Layout (only visible after validation) -->
+<div *ngIf="!loading" class="dashboard-layout">
   <!-- Sidebar -->
   <nav class="sidebar" [class.collapsed]="isCollapsed">
     <div class="sidebar-header">
       <i class="fa-solid fa-bars toggle-btn" (click)="toggleSidebar()"></i>
-      <!-- <button class="toggle-btn" (click)="toggleSidebar()"><i class="fa-solid fa-bars"></i></button> -->
+    </div>
+    <div class="divider"></div>
+    <ul>
+      <li>
+        <a
+          routerLink="dashboard"
+          routerLinkActive="active-link"
+          class="sidebar-link"
+          data-tooltip="Dashboard"
+        >
+          <i class="fas fa-home"></i>
+          <span class="link-text">Dashboard</span>
+        </a>
+      </li>
+      <li>
+        <a
+          routerLink="create-request"
+          routerLinkActive="active-link"
+          class="sidebar-link"
+          data-tooltip="Create Request"
+        >
+          <i class="fas fa-plus-circle"></i>
+          <span class="link-text">Create Request</span>
+        </a>
+      </li>
+      <li>
+        <a
+          routerLink="view-request"
+          routerLinkActive="active-link"
+          class="sidebar-link"
+          data-tooltip="View Requests"
+        >
+          <i class="fas fa-list"></i>
+          <span class="link-text">View Requests</span>
+        </a>
+      </li>
+    </ul>
+  </nav>
+
+  <!-- Main Content -->
+  <main class="main-content">
+    <router-outlet></router-outlet>
+  </main>
+</div>
+
+
+
+
+<!-- <div class="dashboard-layout">
+  Sidebar
+  <nav class="sidebar" [class.collapsed]="isCollapsed">
+    <div class="sidebar-header">
+      <i class="fa-solid fa-bars toggle-btn" (click)="toggleSidebar()"></i>
+      <button class="toggle-btn" (click)="toggleSidebar()"><i class="fa-solid fa-bars"></i></button>
     </div>
     <div class="divider"></div>
     <ul>
@@ -41,13 +101,13 @@
         </a>
       </li>
     </ul>
-    <!-- Resize handle -->
+    Resize handle
   
   </nav>
 
-  <!-- Main Content -->
+  Main Content
   <main class="main-content">
     <router-outlet></router-outlet>
   </main>
 </div>
-
+ -->

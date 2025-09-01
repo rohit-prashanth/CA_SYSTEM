@@ -7,7 +7,9 @@ import { RequestDetail } from './components/request-detail/request-detail';
 import { DocumentEditor } from './components/document-editor/document-editor';
 import { MainLayout } from './components/main-layout/main-layout';
 import { QuillEditor } from './components/quill-editor/quill-editor';
-
+import { Comments } from './components/comments/comments';
+import { AttachmentUpload } from './components/attachment-upload/attachment-upload';
+import { LoginError } from './login-error/login-error';
 
 export const routes: Routes = [
   {
@@ -17,6 +19,7 @@ export const routes: Routes = [
       { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
       { path: 'dashboard', component: Dashboard },
       { path: 'create-request', component: CreateRequest },
+
       {
         path: 'view-request',
         component: ViewRequest,
@@ -29,12 +32,14 @@ export const routes: Routes = [
         ],
       },
       { path: 'editor', component: DocumentEditor },
-      { path: 'quill-editor', component: QuillEditor }
-    ]
-  }
+      { path: 'quill-editor', component: QuillEditor },
+      { path: 'comments', component: Comments },
+      { path: 'attachments', component: AttachmentUpload },
+    ],
+  },
+
+  { path: 'login-error', component: LoginError },
 ];
-
-
 
 // export const routes: Routes = [
 //   {

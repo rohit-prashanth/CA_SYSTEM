@@ -4,12 +4,16 @@
 .editor-container {
   display: flex;
   flex-direction: column;
-  height: 100%;        /* ✅ take height from parent, not full viewport */
+  height: 100%; /* ✅ take height from parent, not full viewport */
   max-width: 100%;
   margin: 0 auto;
-  padding: 15px;
+  /* padding: 15px; */
   box-sizing: border-box;
-  min-height: 0;       /* ✅ allows child flexbox scroll */
+  min-height: 0; /* ✅ allows child flexbox scroll */
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  height: 400px;
+  border: 1px solid rgba(0, 0, 0, 0.2);
+
 }
 
 /* ------------------------------
@@ -22,7 +26,7 @@
   margin-bottom: 12px;
 }
 
-.btn-save {
+/* .btn-save {
   background: linear-gradient(135deg, #43a047, #2e7d32);
   border: none;
   color: #fff;
@@ -36,7 +40,7 @@
 .btn-save:hover {
   background: linear-gradient(135deg, #66bb6a, #388e3c);
   box-shadow: 0 4px 10px rgba(67, 160, 71, 0.3);
-}
+} */
 
 /* ------------------------------
    Editor Wrapper
@@ -45,25 +49,26 @@
   flex: 1 1 auto;
   display: flex;
   flex-direction: column;
-  min-height: 0;       /* ✅ so Quill can scroll without overflow */
-  border-radius: 8px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  min-height: 0; /* ✅ so Quill can scroll without overflow */
+  /* border-radius: 8px; */
+  /* box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08); */
   background: #fff;
   overflow: hidden;
+  /* height: 400px;  */
 }
-
 
 /* Toolbar */
 ::ng-deep .ql-toolbar.ql-snow {
   flex: 0 0 auto;
   border: none !important;
   border-bottom: 1px solid #e0e0e0 !important;
-  background: #fafafa;
-  border-radius: 8px 8px 0 0;
+  background: #e6f0fa;
+  /* border-radius: 8px 8px 0 0; */
   padding: 8px;
   position: sticky;
   top: 0;
   z-index: 10;
+  /* box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08); */
 }
 
 /* Quill Container */
@@ -81,6 +86,7 @@
 ::ng-deep .ql-editor {
   flex: 1 1 auto;
   min-height: 0; /* ✅ so scrollbar works */
+
   padding: 15px;
   overflow-y: auto; /* ✅ only scrollbar here */
   font-family: "Segoe UI", Roboto, sans-serif;
@@ -109,15 +115,78 @@
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
 }
 
-.snackbar-success { background-color: #4caf50 !important; color: #fff; }
-.snackbar-error   { background-color: #f44336 !important; color: #fff; }
+.snackbar-success {
+  background-color: #4caf50 !important;
+  color: #fff;
+}
+.snackbar-error {
+  background-color: #f44336 !important;
+  color: #fff;
+}
 
 /* ------------------------------
    Responsive
 ------------------------------- */
 @media (max-width: 1024px) {
-  .editor-wrapper { height: 70vh; }
+  .editor-wrapper {
+    height: 70vh;
+  }
 }
 @media (max-width: 600px) {
-  .editor-wrapper { height: 60vh; }
+  .editor-wrapper {
+    height: 60vh;
+  }
+}
+
+/* Make the Save button fixed height */
+/* .editor-container button {
+  flex: 0 0 auto;
+  margin: 10px 0px 10px 0px;
+} */
+
+button.custom-button,
+button.custom-cancel-button {
+  min-width: 60px;
+  padding: 0.5rem 1.4rem;
+  font-weight: 600;
+  font-size: 1rem;
+  border-radius: 5px;
+  border: none;
+  transition: background-color 0.3s ease, color 0.3s ease;
+  cursor: pointer;
+}
+
+button.custom-button {
+  background-color: #0078ff8f;
+  /* color: rgba(0, 0, 0, 0.9); */
+  color: rgba(0, 0, 0, 0.8);
+  border: 1.5px solid #ccc;
+}
+
+button.custom-button:hover {
+  background-color: #81b8f0;
+  color: white;
+}
+
+button.custom-cancel-button {
+  background-color: transparent;
+  color: rgba(0, 0, 0, 0.8);
+  border: 1.5px solid #ccc;
+}
+
+button.custom-cancel-button:hover {
+  background-color: #f5f5f5;
+  border-color: #999;
+  color: #333;
+}
+
+.button-container button {
+  padding: 5px;
+  font-size: 11px;
+  margin: 10px;
+}
+
+.button-container {
+  justify-content: flex-end;
+  display: flex;
 }

@@ -1,0 +1,72 @@
+<div class="attachment-container">
+  <!-- Fixed Add Attachment block -->
+  <div class="upload-block">
+    <label class="upload-label">
+      <input type="file" (change)="onFileSelected($event)" />
+      <span>+ Add Attachment</span>
+    </label>
+
+    <!-- Pending file (before saving to backend) -->
+    <div *ngIf="pendingFile" class="pending-card">
+      <p class="file-info">📎 {{ pendingFile.name }}</p>
+      <input [(ngModel)]="pendingName" placeholder="Enter attachment name" />
+      <div class="button-container">
+        <button (click)="confirmAdd()" class="btn custom-button">Save</button>
+        <button (click)="cancelAdd()" class="btn custom-cancel-button">
+          Cancel
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scrollable list of attachments -->
+  <div class="attachment-list" *ngIf="attachments.length > 0">
+    <h3>Attachments</h3>
+    <ul>
+      <li *ngFor="let file of attachments">
+        <div class="attachment-item">
+          <span class="file-name">📄 {{ file.fileName }}</span>
+          <small class="file-original">({{ file.fileType }})</small>
+          <div class="button-container">
+            <button
+              (click)="openPreview(file)"
+              class="btn custom-cancel-button"
+            >
+              Preview
+            </button>
+          </div>
+        </div>
+      </li>
+    </ul>
+  </div>
+</div>
+
+<!-- Fullscreen Preview Modal -->
+@if (showModal) {
+  <div class="modal-backdrop">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2>{{ modalTitle }}</h2>
+        <button (click)="closeModal()" class="close-btn">✕</button>
+      </div>
+
+      <div class="modal-body">
+        @switch (modalType) {
+          @case ('image') {
+            <img [src]="modalUrl" alt="Preview" class="modal-img" />
+          }
+          @case ('pdf') {
+            <iframe [src]="modalUrl" class="modal-iframe"></iframe>
+          }
+          @case ('docx') {
+            <iframe [src]="modalUrl" class="modal-iframe"></iframe>
+          }
+          @case ('other') {
+            <p class="no-preview">⚠️ Preview not available for this file type.</p>
+          }
+        }
+      </div>
+    </div>
+  </div>
+}
+

@@ -4,12 +4,14 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { environment } from '../../environments/environment';
 
+
+
 @Injectable({
   providedIn: 'root',
 })
 export class RequestService {
-  private requestapiUrl = `${environment.apiBaseUrl}/requests`;
-  private commentsapiUrl = `${environment.apiBaseUrl}/comments`;
+  private requestapiUrl = `${environment.apiBaseUrl}/api/requests`;
+  
 
   constructor(private http: HttpClient) {}
 

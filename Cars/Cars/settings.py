@@ -153,6 +153,8 @@ CORS_ALLOWED_ORIGINS = [
     "http://localhost:4200",
 ]
 
+# X_FRAME_OPTIONS = 'SAMEORIGIN'
+X_FRAME_OPTIONS = 'ALLOWALL'
 
 # Media (File Uploads)
 MEDIA_URL = '/media/'

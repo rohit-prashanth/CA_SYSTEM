@@ -23,4 +23,22 @@
   color: rgba(0, 0, 0, 1);
 }
 
+/* Chrome, Edge, Safari */
+.request-detail-table::-webkit-scrollbar {
+  width: 3px;   /* thin scrollbar */
+}
+
+.request-detail-table::-webkit-scrollbar-track {
+  background: #f5f5f5;  /* track background */
+  border-radius: 10px;
+}
+
+.request-detail-table::-webkit-scrollbar-thumb {
+  background-color: #c1c1c1; /* scrollbar thumb */
+  border-radius: 10px;
+}
+
+.request-detail-table::-webkit-scrollbar-thumb:hover {
+  background-color: #a8a8a8;
+}
 /* #f5f5f5; */

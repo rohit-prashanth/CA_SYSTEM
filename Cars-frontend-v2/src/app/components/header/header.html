@@ -3,4 +3,9 @@
     <img src="assets/coromandel-logo.png" alt="Logo" class="logo-icon" />
     <h2 class="logo-title">Change Approval Review System</h2>
   </div>
+
+  <div class="user-container" *ngIf="authService.fullName">
+    <span class="user-name">{{ authService.fullName }}</span>
+    <span class="date-time">{{ currentDateTime }}</span>
+  </div>
 </header>

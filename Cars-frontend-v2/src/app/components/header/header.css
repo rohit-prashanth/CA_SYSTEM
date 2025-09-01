@@ -1,10 +1,10 @@
 .custom-header {
-  background-color: #e6f0fa; /* Bootstrap primary color */
+  background-color: #e6f0fa;
   color: white;
   padding: 0.5rem 1rem;
   display: flex;
   align-items: center;
-  justify-content: flex-start;
+  justify-content: space-between; /* 👈 changed from flex-start */
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   height: 32px;
 }
@@ -12,7 +12,7 @@
 .logo-title {
   font-size: 11px; /* Change text size */
   font-weight: bolder; /* Make it bold */
-  color: rgba(0, 0, 0, 0.7); /* Dark gray text color */
+  color: #444; /* Dark gray text color */
   letter-spacing: 2px; /* Spacing between letters */
   text-transform: uppercase; /* Make text uppercase */
   margin: 0; /* Remove default margin */
@@ -38,4 +38,23 @@
 .logo-container {
   display: flex;
   align-items: center;
+}
+
+.user-container {
+  margin-left: auto; /* push to right */
+  display: flex;
+  align-items: bottom;
+  gap: 6px; /* spacing between name and date/time */
+}
+
+.user-name {
+  font-size: 16px;
+  font-weight: bold;
+  color: #222;
+}
+
+.date-time {
+  font-size: 10px;
+  color: #666;
+  align-content: center;
 }

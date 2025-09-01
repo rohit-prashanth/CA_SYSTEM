@@ -1,13 +1,26 @@
 <div class="dashboard-layout">
   <!-- Sidebar -->
   <nav class="sidebar" [class.collapsed]="sidebarCollapsed">
+    <!-- Toggle Button -->
     <div class="sidebar-header">
-      <i class="fa-solid fa-bars toggle-btn" (click)="toggleSidebar()"></i>
+      <i
+        class="fa-solid toggle-arrow"
+        [ngClass]="{
+          'fa-arrow-left': !sidebarCollapsed,
+          'fa-arrow-right': sidebarCollapsed
+        }"
+        (click)="toggleSidebar()"
+      ></i>
     </div>
 
-    <ng-container *ngIf="!sidebarCollapsed">
+    <!-- Sidebar top section -->
+    <div class="sidebar-top">
       <h6 class="all-requests-title">ALL REQUESTS</h6>
       <div class="sidebar-divider"></div>
+    </div>
+
+    <!-- Scrollable request list -->
+    <div class="sidebar-scroll">
       <ul class="request-list">
         <li
           *ngFor="let request of requests"
@@ -28,8 +41,9 @@
               class="request-name"
               [matTooltip]="request.name"
               matTooltipPosition="right"
-              >{{ request.name }}</span
             >
+              {{ request.name }}
+            </span>
             <span class="arrow" *ngIf="request.sections?.length">
               <i
                 class="fa"
@@ -37,10 +51,10 @@
                   'fa-chevron-down': request.expanded,
                   'fa-chevron-right': !request.expanded
                 }"
-              >
-              </i>
+              ></i>
             </span>
           </div>
+
           <ul class="section-list" *ngIf="request.expanded">
             <li
               *ngFor="let section of request.sections"
@@ -63,10 +77,10 @@
                       'fa-chevron-down': section.expanded,
                       'fa-chevron-right': !section.expanded
                     }"
-                  >
-                  </i>
+                  ></i>
                 </span>
               </div>
+
               <ul class="subsection-list" *ngIf="section.expanded">
                 <li
                   *ngFor="let subsection of section.children"
@@ -84,7 +98,7 @@
           </ul>
         </li>
       </ul>
-    </ng-container>
+    </div>
   </nav>
 
   <!-- Main content area -->

@@ -1,10 +1,16 @@
-import { Component, Input, OnInit, OnChanges, SimpleChanges } from '@angular/core';
+import {
+  Component,
+  Input,
+  OnInit,
+  OnChanges,
+  SimpleChanges,
+} from '@angular/core';
 import { QuillEditorComponent } from 'ngx-quill';
 import { FormsModule } from '@angular/forms';
 import { RequestService } from '../../services/request';
 import { CommonModule } from '@angular/common';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
-import { RouterOutlet } from '@angular/router';
+import { Router, RouterOutlet } from '@angular/router';
 
 @Component({
   selector: 'app-quill-editor',
@@ -29,27 +35,27 @@ export class QuillEditor implements OnInit, OnChanges {
   message: string = '';
   messageType: 'success' | 'error' | '' = '';
 
-  private quill: any; // will hold Quill instance
+  private quill: any; // Quill instance
 
   constructor(
     private requestService: RequestService,
-    private snackBar: MatSnackBar
+    private snackBar: MatSnackBar,
+    private router: Router
   ) {}
 
   ngOnInit() {
     this.loadDocument();
   }
 
- ngOnChanges(changes: SimpleChanges) {
-  if (
-    (changes['requestId'] && !changes['requestId'].firstChange) ||
-    (changes['sectionId'] && !changes['sectionId'].firstChange) ||
-    (changes['subsectionId'] && !changes['subsectionId'].firstChange)
-  ) {
-    this.loadDocument();
+  ngOnChanges(changes: SimpleChanges) {
+    if (
+      (changes['requestId'] && !changes['requestId'].firstChange) ||
+      (changes['sectionId'] && !changes['sectionId'].firstChange) ||
+      (changes['subsectionId'] && !changes['subsectionId'].firstChange)
+    ) {
+      this.loadDocument();
+    }
   }
-}
-
 
   private loadDocument() {
     if (!this.requestId || !this.sectionId || !this.subsectionId) return;
@@ -61,9 +67,8 @@ export class QuillEditor implements OnInit, OnChanges {
       this.content = normalized;
       this.filename = res.filename;
 
-      // If editor is already initialized, push normalized HTML directly
       if (this.quill) {
-        const delta = this.quill.clipboard.convert({ html: normalized });
+        const delta = this.quill.clipboard.convert(normalized);
         this.quill.setContents(delta, 'silent');
         this.ensureTrailingBlankLine();
         this.moveCursorToEnd();
@@ -71,12 +76,13 @@ export class QuillEditor implements OnInit, OnChanges {
     });
   }
 
-  // 🔹 Hook to get Quill instance
+  // Quill editor instance hook
   onEditorCreated(quill: any) {
     this.quill = quill;
-    // If content was already loaded before quill initialized
+
+    // If content was already loaded
     if (this.content) {
-      const delta = this.quill.clipboard.convert({ html: this.content });
+      const delta = this.quill.clipboard.convert(this.content);
       this.quill.setContents(delta, 'silent');
       this.ensureTrailingBlankLine();
       this.moveCursorToEnd();
@@ -86,6 +92,7 @@ export class QuillEditor implements OnInit, OnChanges {
   private normalizeImportedHtml(html: string): string {
     html = html.replace(/<!--[\s\S]*?-->/g, '').trim();
 
+    // Images wrapper
     html = html.replace(
       /<img([^>]*)src="([^"]+)"([^>]*)>/gi,
       (match, before, src, after) => {
@@ -143,7 +150,12 @@ export class QuillEditor implements OnInit, OnChanges {
   }
 
   saveDoc() {
-    this.requestService.exportDocument(this.filename, this.content).subscribe({
+    if (!this.quill) return;
+
+    // Get full HTML including colors, background, code blocks
+    const html = this.quill.root.innerHTML;
+
+    this.requestService.exportDocument(this.filename, html).subscribe({
       next: () => {
         this.snackBar.open('Document saved successfully!', 'Close', {
           duration: 3000,
@@ -163,18 +175,7 @@ export class QuillEditor implements OnInit, OnChanges {
     });
   }
 
-  // cancelDoc() {
-  //   const dialogRef = this.dialog.open(ConfirmDialog, {
-  //     width: '400px',
-  //     disableClose: true,
-  //   });
-
-  //   dialogRef.afterClosed().subscribe((result) => {
-  //     if (result) {
-  //       this.documentEditor.documentEditor.openBlank();
-  //     }
-  //   });
-  // }
+  cancelDoc() {
+    this.router.navigate(['/view-request', 'requests', this.requestId]);
+  }
 }
-
-

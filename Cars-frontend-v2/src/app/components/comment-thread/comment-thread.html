@@ -1,0 +1,160 @@
+<ul class="comment-list">
+  <li *ngFor="let comment of comments" class="comment-item">
+    <div class="comment">
+      <div class="comment-header">
+        <span class="comment-user">{{ comment.user_id }}</span>
+        <span class="comment-time">{{
+          comment.created_at | date : "medium"
+        }}</span>
+      </div>
+
+      <div class="comment-text">
+        {{ comment.text }}
+      </div>
+
+      <div class="comment-actions">
+        <!-- <button class="action-btn danger" (click)="deleteComment(comment.id!)">
+          Delete
+        </button> -->
+
+        <!-- Like / Dislike -->
+        <button class="like-btn" (click)="like(comment)">
+          <i class="fas fa-thumbs-up"></i> {{ comment.likes?.length || 0 }}
+        </button>
+        <button class="dislike-btn" (click)="dislike(comment)">
+          <i class="fas fa-thumbs-down"></i> {{ comment.dislikes?.length || 0 }}
+        </button>
+
+        <button class="action-btn" (click)="toggleReply(comment.id!)">
+          {{ replying[comment.id!] ? "Cancel" : "Reply" }}
+        </button>
+
+        <!-- Collapse/Expand replies -->
+        <button
+          *ngIf="comment.replies && comment.replies.length > 0"
+          class="action-btn"
+          (click)="toggleReplies(comment.id!)"
+        >
+          <i
+            [ngClass]="
+              collapsed[comment.id!]
+                ? 'fas fa-comment-dots'
+                : 'far fa-comment-dots'
+            "
+          ></i>
+          {{ comment.replies.length }} replies
+        </button>
+      </div>
+
+      <!-- Reply box -->
+      <div class="reply-box" *ngIf="replying[comment.id!]">
+        <textarea
+          [(ngModel)]="replyText[comment.id!]"
+          class="comment-input"
+          placeholder="Write a reply..."
+        ></textarea>
+        <button class="comment-btn small" (click)="addReply(comment.id!)">
+          Reply
+        </button>
+      </div>
+    </div>
+
+    <!-- Recursive replies (hidden if collapsed) -->
+    <div
+      class="replies"
+      *ngIf="comment.replies?.length && !collapsed[comment.id!]"
+    >
+      <div *ngIf="comment.replies">
+        Debug: {{ comment.replies.length }} replies
+      </div>
+      <app-comment-thread
+        [comments]="comment.replies || []"
+        [postId]="postId"
+        (refresh)="refresh.emit()"
+      >
+      </app-comment-thread>
+    </div>
+  </li>
+</ul>
+
+<!-- <ul class="comment-list">
+  <li *ngFor="let comment of comments" class="comment-item">
+    <div class="comment">
+      <div class="comment-header">
+        <span class="comment-user">{{ comment.user_id }}</span>
+        <span class="comment-time">{{ comment.created_at | date:'short' }}</span>
+      </div>
+
+      <div class="comment-text">
+        {{ comment.text }}
+      </div>
+
+      <div class="comment-actions">
+        <button class="action-btn" (click)="toggleReply(comment.id!)">
+          {{ replying[comment.id!] ? 'Cancel' : 'Reply' }}
+        </button>
+        <button class="action-btn danger" (click)="deleteComment(comment.id!)">
+          Delete
+        </button>
+      </div>
+
+      Reply box only visible if replying
+      <div class="reply-box" *ngIf="replying[comment.id!]">
+        <textarea
+          [(ngModel)]="replyText[comment.id!]"
+          class="comment-input"
+          placeholder="Write a reply..."></textarea>
+        <button class="comment-btn small" (click)="addReply(comment.id!)">
+          Reply
+        </button>
+      </div>
+    </div>
+
+    Recursive replies
+    <div class="replies">
+      <app-comment-thread
+        [comments]="comment.replies || []"
+        [postId]="postId"
+        (refresh)="refresh.emit()">
+      </app-comment-thread>
+    </div>
+  </li>
+</ul>
+ -->
+
+<!-- <ul class="comment-list">
+  <li *ngFor="let comment of comments" class="comment-item">
+    <div class="comment">
+      <div class="comment-header">
+        <span class="comment-user">{{ comment.user_id }}</span>
+        <span class="comment-time">{{ comment.created_at | date:'short' }}</span>
+      </div>
+      <div class="comment-text">
+        {{ comment.text }}
+      </div>
+
+      <div class="comment-actions">
+        <button class="action-btn" (click)="addReply(comment.id!)">Reply</button>
+        <button class="action-btn danger" (click)="deleteComment(comment.id!)">Delete</button>
+      </div>
+
+      Reply box
+      <div class="reply-box">
+        <textarea
+          [(ngModel)]="replyText[comment.id!]"
+          class="comment-input"
+          placeholder="Write a reply..."></textarea>
+        <button class="comment-btn small" (click)="addReply(comment.id!)">Reply</button>
+      </div>
+    </div>
+
+    Recursive replies
+    <div class="replies">
+      <app-comment-thread
+        [comments]="comment.replies || []"
+        [postId]="postId"
+        (refresh)="refresh.emit()">
+      </app-comment-thread>
+    </div>
+  </li>
+</ul> -->

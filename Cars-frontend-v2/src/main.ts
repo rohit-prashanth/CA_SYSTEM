@@ -12,6 +12,7 @@ import QuillBetterTable from 'quill-better-table';
 // import ImageResize from 'quill-image-resize-module';
 import { imageHandler } from './app/core/quill-custom/image-handler';
 import { ResizableImage } from './app/core/quill-custom/image-blot';
+
 // Syncfusion license
 registerLicense(
   'ORg4AjUWIQA/Gnt3VVhhQlJDfVZdXGFWfFN0QHNfdV54flBDcC0sT3RfQFhjQX9QdkNiUHtWeXxWQmtfUQ=='
@@ -35,15 +36,15 @@ bootstrapApplication(App, {
           container: [
             ['bold', 'italic', 'underline', 'strike'],
             [{ font: [] }],
-            [{ size: ['small', false, 'large', 'huge'] }],
+            // [{ size: ['small', false, 'large', 'huge'] }],
             [{ header: [1, 2, 3, 4, 5, 6, false] }],
-            [{ color: [] }, { background: [] }],
+            // [{ color: [] }, { background: [] }],
             [{ list: 'ordered' }, { list: 'bullet' }],
             [{ indent: '-1' }, { indent: '+1' }],
             [{ script: 'sub' }, { script: 'super' }],
             [{ align: [] }],
             [{ direction: 'rtl' }],
-            ['blockquote', 'code-block'],
+            // ['blockquote', 'code-block'],
             // ['link', 'image', 'video', 'formula', 'table'],
             ['link', 'table'],
             ['image'],
@@ -65,6 +66,18 @@ bootstrapApplication(App, {
             },
           },
         },
+        formats: [
+          'bold',
+          'italic',
+          'underline',
+          'strike',
+          'color',
+          'background',
+          'code-block',
+          'link',
+          'image',
+          'list',
+        ],
         // imageResize: {},
         'better-table': {
           operationMenu: {
