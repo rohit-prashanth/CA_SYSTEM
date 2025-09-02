@@ -19,7 +19,6 @@ from .models import (
 )
 
 
-
 class CCBRequestSubSectionJoinSerializer(serializers.ModelSerializer):
     sub_section_name = serializers.CharField(source="sub_section.sub_section_name")
 
@@ -44,19 +43,46 @@ class CCBRequestSectionJoinSerializer(serializers.ModelSerializer):
 
 
 class CCBRequestsSerializer(serializers.ModelSerializer):
-    change_status = serializers.SerializerMethodField()
-    it_vertical = serializers.SerializerMethodField()
-    sbu = serializers.SerializerMethodField()
-    scope_of_change = serializers.SerializerMethodField()
-    change_class = serializers.SerializerMethodField()
-    submitted_by = serializers.SerializerMethodField()
-    approved_by = serializers.SerializerMethodField()
-    proposal_assessed_by = serializers.SerializerMethodField()
-    proposal_recommend = serializers.SerializerMethodField()
-    arch_assessed_by = serializers.SerializerMethodField()
-    arch_recommend = serializers.SerializerMethodField()
-    cio_decision = serializers.SerializerMethodField()
-    cio_priority = serializers.SerializerMethodField()
+    # accept IDs for FKs
+    it_vertical = serializers.PrimaryKeyRelatedField(
+        queryset=ITVerticals.objects.all(), required=False, allow_null=True
+    )
+    sbu = serializers.PrimaryKeyRelatedField(
+        queryset=SBUs.objects.all(), required=False, allow_null=True
+    )
+    scope_of_change = serializers.PrimaryKeyRelatedField(
+        queryset=CCBScopes.objects.all(), required=False, allow_null=True
+    )
+    change_class = serializers.PrimaryKeyRelatedField(
+        queryset=CCBClassification.objects.all(), required=False, allow_null=True
+    )
+    submitted_by = serializers.PrimaryKeyRelatedField(
+        queryset=CCBUsers.objects.all(), required=False, allow_null=True
+    )
+    approved_by = serializers.PrimaryKeyRelatedField(
+        queryset=ITVerticals.objects.all(), required=False, allow_null=True
+    )
+    proposal_assessed_by = serializers.PrimaryKeyRelatedField(
+        queryset=CCBUsers.objects.all(), required=False, allow_null=True
+    )
+    proposal_recommend = serializers.PrimaryKeyRelatedField(
+        queryset=CCBDecisions.objects.all(), required=False, allow_null=True
+    )
+    arch_assessed_by = serializers.PrimaryKeyRelatedField(
+        queryset=CCBUsers.objects.all(), required=False, allow_null=True
+    )
+    arch_recommend = serializers.PrimaryKeyRelatedField(
+        queryset=CCBDecisions.objects.all(), required=False, allow_null=True
+    )
+    cio_decision = serializers.PrimaryKeyRelatedField(
+        queryset=CCBDecisions.objects.all(), required=False, allow_null=True
+    )
+    cio_priority = serializers.PrimaryKeyRelatedField(
+        queryset=CCBPriorities.objects.all(), required=False, allow_null=True
+    )
+    change_status = serializers.PrimaryKeyRelatedField(
+        queryset=CCBStatus.objects.all(), required=False, allow_null=True
+    )
 
     sections = CCBRequestSectionJoinSerializer(many=True, read_only=True)
 
@@ -64,49 +90,55 @@ class CCBRequestsSerializer(serializers.ModelSerializer):
         model = CCBRequests
         fields = "__all__"
 
-    def get_change_status(self, obj):
-        return obj.change_status.status if obj.change_status else None
+    def to_representation(self, instance):
+        """Convert FK IDs to human-readable names in response"""
+        rep = super().to_representation(instance)
 
-    def get_it_vertical(self, obj):
-        return obj.it_vertical.it_vertical if obj.it_vertical else None
-
-    def get_sbu(self, obj):
-        return obj.sbu.business_unit if obj.sbu else None
-
-    def get_scope_of_change(self, obj):
-        return obj.scope_of_change.change_scope if obj.scope_of_change else None
-
-    def get_change_class(self, obj):
-        return obj.change_class.classification if obj.change_class else None
-
-    def get_submitted_by(self, obj):
-        return obj.submitted_by.user_name if obj.submitted_by else None
-
-    def get_approved_by(self, obj):
-        return (
-            obj.approved_by.vertical_lead.user_name
-            if (obj.approved_by and obj.approved_by.vertical_lead)
+        rep["it_vertical"] = (
+            instance.it_vertical.it_vertical if instance.it_vertical else None
+        )
+        rep["sbu"] = instance.sbu.business_unit if instance.sbu else None
+        rep["scope_of_change"] = (
+            instance.scope_of_change.change_scope if instance.scope_of_change else None
+        )
+        rep["change_class"] = (
+            instance.change_class.classification if instance.change_class else None
+        )
+        rep["submitted_by"] = (
+            instance.submitted_by.user_name if instance.submitted_by else None
+        )
+        rep["approved_by"] = (
+            instance.approved_by.vertical_lead.user_name
+            if (instance.approved_by and instance.approved_by.vertical_lead)
             else None
         )
+        rep["proposal_assessed_by"] = (
+            instance.proposal_assessed_by.user_name
+            if instance.proposal_assessed_by
+            else None
+        )
+        rep["proposal_recommend"] = (
+            instance.proposal_recommend.decision
+            if instance.proposal_recommend
+            else None
+        )
+        rep["arch_assessed_by"] = (
+            instance.arch_assessed_by.user_name if instance.arch_assessed_by else None
+        )
+        rep["arch_recommend"] = (
+            instance.arch_recommend.decision if instance.arch_recommend else None
+        )
+        rep["cio_decision"] = (
+            instance.cio_decision.decision if instance.cio_decision else None
+        )
+        rep["cio_priority"] = (
+            instance.cio_priority.priority if instance.cio_priority else None
+        )
+        rep["change_status"] = (
+            instance.change_status.status if instance.change_status else None
+        )
 
-    def get_proposal_assessed_by(self, obj):
-        return obj.proposal_assessed_by.user_name if obj.proposal_assessed_by else None
-
-    def get_proposal_recommend(self, obj):
-        return obj.proposal_recommend.decision if obj.proposal_recommend else None
-
-    def get_arch_assessed_by(self, obj):
-        return obj.arch_assessed_by.user_name if obj.arch_assessed_by else None
-
-    def get_arch_recommend(self, obj):
-        return obj.arch_recommend.decision if obj.arch_recommend else None
-
-    def get_cio_decision(self, obj):
-        return obj.cio_decision.decision if obj.cio_decision else None
-
-    def get_cio_priority(self, obj):
-        return obj.cio_priority.priority if obj.cio_priority else None
-
+        return rep
 
     def create(self, validated_data):
         # create the request record
@@ -121,7 +153,9 @@ class CCBRequestsSerializer(serializers.ModelSerializer):
             )
 
             # get all active subsections for this section
-            subsections = CCBSubSections.objects.filter(section=section, is_active=True).order_by("sequence")
+            subsections = CCBSubSections.objects.filter(
+                section=section, is_active=True
+            ).order_by("sequence")
 
             for subsection in subsections:
                 CCBRequestSubSectionJoin.objects.create(
@@ -129,7 +163,7 @@ class CCBRequestsSerializer(serializers.ModelSerializer):
                     section=section,
                     sub_section=subsection,
                     is_active=True,
-                    content=""  # default empty content
+                    content="",  # default empty content
                 )
 
         return request_instance
@@ -181,4 +215,3 @@ class CCBStatusSerializer(serializers.ModelSerializer):
     class Meta:
         model = CCBStatus
         fields = "__all__"
-

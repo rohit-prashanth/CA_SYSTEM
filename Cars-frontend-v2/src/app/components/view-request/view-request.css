@@ -282,7 +282,7 @@
 
 /* Scrollbar styling for main content */
 .main-content::-webkit-scrollbar {
-  width: 5px;
+  width: 2px;
 }
 .main-content::-webkit-scrollbar-track {
   background: #ffffff;

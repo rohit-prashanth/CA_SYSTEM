@@ -9,9 +9,10 @@ import {
 import { CommonModule } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { RequestService } from '../../services/request';
-import { RequestItem, Section, staticSections } from './sections.data';
+import { RequestItem, Section } from './sections.data';
 import { filter } from 'rxjs/operators';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { SidebarStateService } from '../../shared-services/sidebar-state.service';
 
 @Component({
   selector: 'app-view-request',
@@ -33,18 +34,29 @@ export class ViewRequest implements OnInit {
     private http: HttpClient,
     private requestService: RequestService,
     private router: Router,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private sidebarState: SidebarStateService
   ) {}
 
   ngOnInit() {
-    this.fetchRequests();
+    this.route.firstChild?.paramMap.subscribe((params) => {
+      const requestId = Number(params.get('requestId'));
+      const sectionId = Number(params.get('sectionId'));
+      const subsectionId = Number(params.get('subsectionId'));
+      
+      if (requestId) {
+        this.fetchRequests(() => {
+          console.log('Child params:', requestId, sectionId, subsectionId);
+          this.restoreSidebarState(requestId, sectionId, subsectionId);
+        });
+      }
+    });
 
-    // Build breadcrumbs on navigation
-    // this.router.events
-    //   .pipe(filter((event) => event instanceof NavigationEnd))
-    //   .subscribe(() => {
-    //     this.breadcrumbs = this.buildBreadcrumbs();
-    //   });
+    this.sidebarState.resetState$.subscribe((reqId) => {
+      if (reqId) {
+        this.resetSidebarState(reqId);
+      }
+    });
   }
 
   sidebarCollapsed = false; // Sidebar starts expanded
@@ -53,7 +65,38 @@ export class ViewRequest implements OnInit {
     this.sidebarCollapsed = !this.sidebarCollapsed;
   }
 
-  fetchRequests() {
+  // fetchRequests() {
+  //   this.requestService.getCCBRequests().subscribe({
+  //     next: (res: any[]) => {
+  //       this.requests = res.map((req) => ({
+  //         id: req.row_id,
+  //         name: req.change_title,
+  //         status: req.change_status,
+  //         expanded: false,
+  //         // map API sections/subsections, adding expanded/active flags for UI
+  //         sections: (req.sections || []).map((section: any) => ({
+  //           id: section.row_id,
+  //           name: section.section_name,
+  //           expanded: false,
+  //           active: false,
+  //           children: (section.subsections || []).map((subsection: any) => ({
+  //             id: subsection.row_id,
+  //             name: subsection.sub_section_name,
+  //             active: false,
+  //             content: subsection.content,
+  //             isActive: subsection.is_active,
+  //           })),
+  //         })),
+  //       }));
+  //       // this.breadcrumbs = this.buildBreadcrumbs();
+  //     },
+  //     error: (err) => {
+  //       console.error('Failed to load requests', err);
+  //     },
+  //   });
+  // }
+
+  fetchRequests(callback?: () => void) {
     this.requestService.getCCBRequests().subscribe({
       next: (res: any[]) => {
         this.requests = res.map((req) => ({
@@ -61,7 +104,6 @@ export class ViewRequest implements OnInit {
           name: req.change_title,
           status: req.change_status,
           expanded: false,
-          // map API sections/subsections, adding expanded/active flags for UI
           sections: (req.sections || []).map((section: any) => ({
             id: section.row_id,
             name: section.section_name,
@@ -76,7 +118,7 @@ export class ViewRequest implements OnInit {
             })),
           })),
         }));
-        // this.breadcrumbs = this.buildBreadcrumbs();
+        if (callback) callback();
       },
       error: (err) => {
         console.error('Failed to load requests', err);
@@ -86,6 +128,84 @@ export class ViewRequest implements OnInit {
 
   navigateTo(url: string) {
     this.router.navigateByUrl(url);
+  }
+
+  // ✅ change method signature to accept requestId
+  resetSidebarState(activeRequestId: number) {
+    this.requests = this.requests.map((req) => {
+      if (req.id === activeRequestId) {
+        return {
+          ...req,
+          active: true, // keep request active
+          expanded: false, // collapse its sections
+          sections: req.sections.map((sec) => ({
+            ...sec,
+            active: false,
+            expanded: false,
+            children: sec.children.map((sub) => ({
+              ...sub,
+              active: false,
+            })),
+          })),
+        };
+      }
+
+      // reset all other requests
+      return {
+        ...req,
+        active: false,
+        expanded: false,
+        sections: req.sections.map((sec) => ({
+          ...sec,
+          active: false,
+          expanded: false,
+          children: sec.children.map((sub) => ({
+            ...sub,
+            active: false,
+          })),
+        })),
+      };
+    });
+  }
+
+  restoreSidebarState(
+    requestId: number,
+    sectionId?: number,
+    subsectionId?: number
+  ) {
+    this.requests = this.requests.map((req) => {
+      if (req.id !== requestId) {
+        return { ...req, active: false, expanded: false };
+      }
+
+      return {
+        ...req,
+        active: true,
+        expanded: true,
+        sections: req.sections.map((sec) => {
+          if (sectionId && sec.id === sectionId) {
+            return {
+              ...sec,
+              expanded: true,
+              active: true,
+              children: sec.children.map((sub) => ({
+                ...sub,
+                active: subsectionId ? sub.id === subsectionId : sub.active,
+              })),
+            };
+          }
+          return {
+            ...sec,
+            expanded: false,
+            active: false,
+            children: sec.children.map((sub) => ({
+              ...sub,
+              active: false,
+            })),
+          };
+        }),
+      };
+    });
   }
 
   toggleRequest(request: RequestItem) {

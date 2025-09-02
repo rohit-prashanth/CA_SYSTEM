@@ -2,7 +2,7 @@
   <li *ngFor="let comment of comments" class="comment-item">
     <div class="comment">
       <div class="comment-header">
-        <span class="comment-user">{{ comment.user_id }}</span>
+        <span class="comment-user">{{ comment.user_name || 'Unknown User' }}</span>
         <span class="comment-time">{{
           comment.created_at | date : "medium"
         }}</span>
@@ -64,12 +64,13 @@
       class="replies"
       *ngIf="comment.replies?.length && !collapsed[comment.id!]"
     >
-      <div *ngIf="comment.replies">
+      <!-- <div *ngIf="comment.replies">
         Debug: {{ comment.replies.length }} replies
-      </div>
+      </div> -->
       <app-comment-thread
         [comments]="comment.replies || []"
         [postId]="postId"
+        [userId]="userId"
         (refresh)="refresh.emit()"
       >
       </app-comment-thread>

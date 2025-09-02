@@ -6,14 +6,15 @@ import { environment } from '../../environments/environment';
 export interface Comment {
   id?: string;
   post_id: string;
-  user_id: string;
+  user_id: number | null;
+  user_name?: string;
   text: string;
   parent?: string | null; // 👈 make optional
   created_at?: string;
   updated_at?: string;
   replies?: Comment[];
-  likes?: string[]; // array of user_ids who liked
-  dislikes?: string[]; // array of user_ids who disliked
+  likes?: number[]; // array of user_ids who liked
+  dislikes?: number[]; // array of user_ids who disliked
 }
 
 @Injectable({
@@ -63,17 +64,23 @@ export class CommentService {
     return this.http.delete<void>(`${this.apiUrl}/comments/${commentId}/`);
   }
 
-   /** Like a comment */
-  likeComment(commentId: string, userId: string): Observable<Comment> {
-    return this.http.post<Comment>(`${this.apiUrl}/comments/${commentId}/like/`, {
-      user_id: userId,
-    });
+  /** Like a comment */
+  likeComment(commentId: string, userId: number): Observable<Comment> {
+    return this.http.post<Comment>(
+      `${this.apiUrl}/comments/${commentId}/like/`,
+      {
+        user_id: userId,
+      }
+    );
   }
 
   /** Dislike a comment */
-  dislikeComment(commentId: string, userId: string): Observable<Comment> {
-    return this.http.post<Comment>(`${this.apiUrl}/comments/${commentId}/dislike/`, {
-      user_id: userId,
-    });
+  dislikeComment(commentId: string, userId: number): Observable<Comment> {
+    return this.http.post<Comment>(
+      `${this.apiUrl}/comments/${commentId}/dislike/`,
+      {
+        user_id: userId,
+      }
+    );
   }
 }

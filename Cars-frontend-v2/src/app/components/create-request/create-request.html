@@ -155,7 +155,8 @@
         class="form-control"
         id="budgetValue"
         formControlName="budget_value"
-        placeholder="Eg: 12,34,56,789."
+        appIndianCurrencyFormatter
+        placeholder="Eg: ₹12,34,56,789."
       />
     </div>
 
@@ -167,8 +168,9 @@
         type="text"
         class="form-control"
         id="submittedBy"
-        formControlName="submitted_by"
         placeholder="Name"
+        [value]="authService.fullName"
+        disabled
       />
     </div>
 

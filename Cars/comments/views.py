@@ -6,6 +6,8 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 
+from request_app.models import CCBUsers
+
 from .mongo_models import Attachment, CCBComments, CCBAttachments, Comment
 from .serializers_mongo import (
     AttachmentSerializer,
@@ -20,26 +22,45 @@ Attachment_URL = os.path.join(settings.MEDIA_URL, "attachments")
 os.makedirs(Attachment_DIR, exist_ok=True)
 
 
-def build_comment_tree(comment):
-    data = {
-        "id": str(comment.id),
-        "post_id": comment.post_id,
-        "user_id": comment.user_id,
-        "text": comment.text,
-        "created_at": comment.created_at,
-        "likes": comment.likes if hasattr(comment, "likes") else [],
-        "dislikes": comment.dislikes if hasattr(comment, "dislikes") else [],
-        "replies": [],
-    }
-    replies = Comment.objects(parent=comment.id)
-    data["replies"] = [build_comment_tree(r) for r in replies]
-    return data
-
 
 class CommentListCreateAPIView(APIView):
 
     def get(self, request, post_id):
-        comments = Comment.objects(post_id=post_id, parent=None)  # only top-level
+        comments = Comment.objects(post_id=post_id, parent=None)
+
+        # 1. Gather all user_ids (including nested replies)
+        def collect_user_ids(comments):
+            ids = set()
+            for c in comments:
+                ids.add(c.user_id)
+                replies = Comment.objects(parent=c.id)
+                ids.update(collect_user_ids(replies))
+            return ids
+
+        user_ids = collect_user_ids(comments)
+
+        # 2. Fetch all users in one query
+        users = CCBUsers.objects.filter(row_id__in=list(user_ids)).only("row_id", "user_name")
+        user_map = {u.row_id: u.user_name for u in users}
+
+
+        # 3. Build tree with usernames injected
+        def build_comment_tree(comment):
+            data = {
+                "id": str(comment.id),
+                "post_id": comment.post_id,
+                "user_id": comment.user_id,
+                "user_name": user_map.get(comment.user_id, "Unknown User"),
+                "text": comment.text,
+                "created_at": comment.created_at,
+                "likes": getattr(comment, "likes", []),
+                "dislikes": getattr(comment, "dislikes", []),
+                "replies": [],
+            }
+            replies = Comment.objects(parent=comment.id)
+            data["replies"] = [build_comment_tree(r) for r in replies]
+            return data
+
         data = [build_comment_tree(c) for c in comments]
         return Response(data)
 

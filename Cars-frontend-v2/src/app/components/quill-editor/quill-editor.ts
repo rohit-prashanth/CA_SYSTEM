@@ -11,6 +11,7 @@ import { RequestService } from '../../services/request';
 import { CommonModule } from '@angular/common';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { Router, RouterOutlet } from '@angular/router';
+import { SidebarStateService } from '../../shared-services/sidebar-state.service';
 
 @Component({
   selector: 'app-quill-editor',
@@ -40,7 +41,8 @@ export class QuillEditor implements OnInit, OnChanges {
   constructor(
     private requestService: RequestService,
     private snackBar: MatSnackBar,
-    private router: Router
+    private router: Router,
+    private sidebarState: SidebarStateService
   ) {}
 
   ngOnInit() {
@@ -176,6 +178,10 @@ export class QuillEditor implements OnInit, OnChanges {
   }
 
   cancelDoc() {
-    this.router.navigate(['/view-request', 'requests', this.requestId]);
+    const id = this.requestId ? Number(this.requestId) : null;
+    if (id !== null) {
+      this.sidebarState.resetSidebar(id); // ✅ now it's a number
+      this.router.navigate(['/view-request', 'requests', id]);
+    }
   }
 }

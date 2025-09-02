@@ -25,7 +25,7 @@
 
 /* Chrome, Edge, Safari */
 .request-detail-table::-webkit-scrollbar {
-  width: 3px;   /* thin scrollbar */
+  width: 2px;   /* thin scrollbar */
 }
 
 .request-detail-table::-webkit-scrollbar-track {

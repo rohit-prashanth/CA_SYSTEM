@@ -25,6 +25,8 @@ export class CommentThread {
   }
   private _comments: Comment[] = [];
 
+  
+  @Input() userId!: number | null;
   @Input() postId!: string;
   @Output() refresh = new EventEmitter<void>();
 
@@ -37,14 +39,14 @@ export class CommentThread {
   constructor(private commentService: CommentService) {}
 
   like(comment: Comment) {
-   this.commentService.likeComment(comment.id!, 'current_user').subscribe((updated) => {
+   this.commentService.likeComment(comment.id!, this.userId!).subscribe((updated) => {
     comment.likes = updated.likes;
     comment.dislikes = updated.dislikes;
   });
   }
 
   dislike(comment: Comment) {
-    this.commentService.dislikeComment(comment.id!, 'current_user').subscribe((updated) => {
+    this.commentService.dislikeComment(comment.id!, this.userId!).subscribe((updated) => {
     comment.likes = updated.likes;
     comment.dislikes = updated.dislikes;
   });
@@ -69,7 +71,7 @@ export class CommentThread {
 
     const reply: Comment = {
       post_id: this.postId,
-      user_id: 'current_user',
+      user_id: this.userId,
       text,
       parent: parentId,
     };

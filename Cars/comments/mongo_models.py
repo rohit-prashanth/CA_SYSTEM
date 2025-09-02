@@ -40,11 +40,11 @@ class Comment(Document):
     post_id = StringField(
         required=True
     )  # ID of the post/article this comment belongs to
-    user_id = StringField(required=True)  # user who made the comment
+    user_id = IntField() 
     parent = ReferenceField("self", null=True)  # allows nesting
     text = StringField(required=True)
-    likes = ListField(StringField())  # store user_ids who liked
-    dislikes = ListField(StringField())  # store user_ids who disliked
+    likes = ListField(IntField(), default=list)  # store user_ids who liked
+    dislikes = ListField(IntField(), default=list)  # store user_ids who disliked
     created_at = DateTimeField(default=dt.datetime.now(dt.timezone.utc))
     updated_at = DateTimeField(default=dt.datetime.now(dt.timezone.utc))
 

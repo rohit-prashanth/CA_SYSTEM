@@ -10,6 +10,7 @@
     <div class="comments-scroll">
       <!-- Top-level comments -->
       <app-comment-thread
+        [userId]="userId"
         [comments]="comments"
         [postId]="postId"
         (refresh)="loadComments()"

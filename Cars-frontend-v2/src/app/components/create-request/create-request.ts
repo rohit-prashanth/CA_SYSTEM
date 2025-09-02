@@ -26,7 +26,9 @@ import { DatePipe } from '@angular/common';
 import { MAT_DATE_FORMATS } from '@angular/material/core';
 import { CUSTOM_DATE_FORMATS } from '../../date-format';
 import { Dashboard } from '../dashboard/dashboard';
-
+import { AuthService } from '../../services/auth';
+import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
+import { IndianCurrencyFormatterDirective } from '../../directives/indian-currency-formatter.directive';
 
 @Component({
   selector: 'app-create-request',
@@ -40,8 +42,10 @@ import { Dashboard } from '../dashboard/dashboard';
     MatNativeDateModule,
     MatIconModule,
     MatButtonModule,
+    MatSnackBarModule,
     Dashboard,
-    RouterOutlet
+    RouterOutlet,
+    IndianCurrencyFormatterDirective,
   ],
   templateUrl: './create-request.html',
   styleUrl: './create-request.css',
@@ -62,7 +66,9 @@ export class CreateRequest implements OnInit {
     private fb: FormBuilder,
     private router: Router,
     private requestService: RequestService,
-    private datePipe: DatePipe
+    private datePipe: DatePipe,
+    public authService: AuthService,
+    private snackBar: MatSnackBar
   ) {}
 
   ngOnInit() {
@@ -96,10 +102,18 @@ export class CreateRequest implements OnInit {
       actual_go_live_date: [null],
     });
 
+    // this.form.get('budget_value')?.valueChanges.subscribe((val) => {
+    //   console.log('Form value for budget_value:', val);
+    // });
+
     this.loadITVerticals();
     this.loadSBUs();
     this.loadCCBScopes();
     this.loadCCBClassification();
+
+    this.form.patchValue({
+      submitted_by: this.authService.rowId, // <-- rowId goes to form
+    });
   }
 
   loadITVerticals() {
@@ -182,32 +196,103 @@ export class CreateRequest implements OnInit {
     this.form.get(controlName)?.setValue(formatted);
   }
 
+  // onSubmit() {
+  //   if (this.form.valid) {
+  //     // const formatDate = (date: Date): string | null => {
+  //     //   return date
+  //     //     ? date.toISOString().split('T')[0].replace(/-/g, '/')
+  //     //     : null;
+  //     // };
+
+  //     const formattedPlanDate = this.formatDate(
+  //       this.form.value.plan_go_live_date
+  //     );
+  //     const formattedActualDate = this.formatDate(
+  //       this.form.value.actual_go_live_date
+  //     );
+
+  //     this.form.patchValue({
+  //       plan_go_live_date: formattedPlanDate,
+  //       actual_go_live_date: formattedActualDate,
+  //     });
+  //     const formData = this.form.value;
+  //     console.log('Submitting:', formData);
+
+  //     this.requestService.submitCCBRequests(formData).subscribe({
+  //       next: (response) => {
+  //         console.log('Request submitted successfully:', response);
+  //         alert('Request submitted successfully!');
+  //       },
+  //       error: (error) => {
+  //         console.error('Error submitting request:', error);
+  //         alert('Something went wrong. Please try again.');
+  //       },
+  //     });
+  //   } else {
+  //     this.form.markAllAsTouched();
+  //     alert('Please fill out all required fields.');
+  //   }
+  // }
+
   onSubmit() {
     if (this.form.valid) {
-      // const formatDate = (date: Date): string | null => {
-      //   return date
-      //     ? date.toISOString().split('T')[0].replace(/-/g, '/')
-      //     : null;
-      // };
+      const rawForm = this.form.getRawValue();
 
-      const formattedPlanDate = this.formatDate(
-        this.form.value.plan_go_live_date
-      );
-      const formattedActualDate = this.formatDate(
-        this.form.value.actual_go_live_date
-      );
+      const formattedPlanDate = this.formatDate(rawForm.plan_go_live_date);
+      const formattedActualDate = this.formatDate(rawForm.actual_go_live_date);
 
-      this.form.patchValue({
+      const formData = {
+        ...rawForm,
+        it_vertical: rawForm.it_vertical ? Number(rawForm.it_vertical) : null,
+        sbu: rawForm.sbu ? Number(rawForm.sbu) : null,
+        scope_of_change: rawForm.scope_of_change
+          ? Number(rawForm.scope_of_change)
+          : null,
+        change_class: rawForm.change_class
+          ? Number(rawForm.change_class)
+          : null,
+        submitted_by: this.authService.rowId,
         plan_go_live_date: formattedPlanDate,
         actual_go_live_date: formattedActualDate,
-      });
-      const formData = this.form.value;
+        change_status:2
+      };
+
       console.log('Submitting:', formData);
 
       this.requestService.submitCCBRequests(formData).subscribe({
         next: (response) => {
           console.log('Request submitted successfully:', response);
-          alert('Request submitted successfully!');
+
+          this.snackBar.open('✅ Request submitted successfully!', 'Close', {
+            duration: 3000, // auto close after 3s
+            horizontalPosition: 'right',
+            verticalPosition: 'top',
+            panelClass: ['success-snackbar'], // custom class for styling
+          });
+
+          // ✅ Reset form with defaults
+          const today = new Date();
+          const backendDate = today.toISOString().split('T')[0];
+
+          this.form.reset({
+            proposal_date: backendDate,
+            submitted_by: this.authService.rowId,
+            budgeted: 'YES',
+            it_vertical: this.verticals[0]?.row_id ?? null,
+            sbu: this.sbus[0]?.row_id ?? null,
+            scope_of_change: this.ccbScopes[0]?.row_id ?? null,
+            change_class: this.ccbClassification[0]?.row_id ?? null,
+          });
+
+          // ✅ Reset display date
+          this.formattedDate = `${(today.getMonth() + 1)
+            .toString()
+            .padStart(2, '0')}/${today
+            .getDate()
+            .toString()
+            .padStart(2, '0')}/${today.getFullYear()}`;
+
+          this.router.navigate(['/']);
         },
         error: (error) => {
           console.error('Error submitting request:', error);
@@ -224,41 +309,3 @@ export class CreateRequest implements OnInit {
     this.router.navigate(['/']); // Change '/dashboard' to your desired route
   }
 }
-
-// import { Component } from '@angular/core';
-// import { FormGroup, FormBuilder, Validators, ReactiveFormsModule } from '@angular/forms';
-
-// @Component({
-//   selector: 'app-create-request',
-//   standalone: true,
-//   imports: [ReactiveFormsModule],
-//   templateUrl: './create-request.html',
-//   styleUrl: './create-request.css'
-// })
-// export class CreateRequest {
-//   form: FormGroup;
-
-//   constructor(private fb: FormBuilder) {
-//     this.form = this.fb.group({
-//       name: ['', Validators.required],
-//       // Add other form controls here
-//     });
-//   }
-
-//   onSubmit() {
-//     if (this.form.valid) {
-//       console.log('Form submitted:', this.form.value);
-//     } else {
-//       console.log('Form is invalid');
-//     }
-//   }
-// }
-
-// @Component({
-//   selector: 'app-create-request',
-//   standalone: true,
-//   imports: [ReactiveFormsModule, CommonModule],
-//   templateUrl: './create-request.html',
-//   styleUrl:'./create-request.css'
-// })
-// export class CreateRequestComponent {
