@@ -20,7 +20,10 @@
           class="sidebar-link"
           data-tooltip="Dashboard"
         >
-          <i class="fas fa-home"></i>
+          <!-- <i class="fas fa-home"></i> -->
+          <!-- <i class="fas fa-th-large"></i> -->
+          <i class="fas fa-chart-line"></i>
+          <!-- <i class="fas fa-tachometer-alt"></i> -->
           <span class="link-text">Dashboard</span>
         </a>
       </li>
@@ -31,7 +34,9 @@
           class="sidebar-link"
           data-tooltip="Create Request"
         >
-          <i class="fas fa-plus-circle"></i>
+          <!-- <i class="fas fa-plus-circle"></i> -->
+          <i class="fas fa-file-circle-plus"></i>
+
           <span class="link-text">Create Request</span>
         </a>
       </li>
@@ -43,6 +48,9 @@
           data-tooltip="View Requests"
         >
           <i class="fas fa-list"></i>
+          <!-- <i class="fas fa-file-alt"></i> -->
+          <!-- <i class="fas fa-folder-open"></i> -->
+          <!-- <i class="fas fa-eye"></i> -->
           <span class="link-text">View Requests</span>
         </a>
       </li>
@@ -51,63 +59,10 @@
 
   <!-- Main Content -->
   <main class="main-content">
+    <!-- <nav class="breadcrumb-navbar">
+      <app-breadcrumb></app-breadcrumb>
+    </nav> -->
     <router-outlet></router-outlet>
+    <!-- Separate navbar for breadcrumbs -->
   </main>
 </div>
-
-
-
-
-<!-- <div class="dashboard-layout">
-  Sidebar
-  <nav class="sidebar" [class.collapsed]="isCollapsed">
-    <div class="sidebar-header">
-      <i class="fa-solid fa-bars toggle-btn" (click)="toggleSidebar()"></i>
-      <button class="toggle-btn" (click)="toggleSidebar()"><i class="fa-solid fa-bars"></i></button>
-    </div>
-    <div class="divider"></div>
-    <ul>
-        <li>
-            <a
-        routerLink="dashboard"
-        routerLinkActive="active-link"
-        class="sidebar-link"
-        data-tooltip="Dashboard"
-      >
-        <i class="fas fa-home"></i>
-        <span class="link-text">Dashboard</span>
-      </a>
-        </li>
-      <li>
-        <a
-          routerLink="create-request"
-          routerLinkActive ="active-link"
-          class="sidebar-link"
-          data-tooltip="Create Request"
-        >
-          <i class="fas fa-plus-circle"></i>
-          <span class="link-text">Create Request</span>
-        </a>
-      </li>
-      <li>
-        <a
-          routerLink="view-request"
-          class="sidebar-link"
-          routerLinkActive="active-link"
-          data-tooltip="View Request"
-        >
-          <i class="fas fa-list"></i>
-          <span class="link-text">View Requests</span>
-        </a>
-      </li>
-    </ul>
-    Resize handle
-  
-  </nav>
-
-  Main Content
-  <main class="main-content">
-    <router-outlet></router-outlet>
-  </main>
-</div>
- -->

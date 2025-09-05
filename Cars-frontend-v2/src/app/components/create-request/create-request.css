@@ -104,12 +104,12 @@ button.custom-cancel-button {
 }
 
 button.custom-button {
-  background-color: #e6f0fa;
+  background-color: #0078ff8f;
   color: rgba(0, 0, 0, 0.7);
 }
 
 button.custom-button:hover {
-  background-color: #81b8f0;
+  background-color: #0077ff;
   color: white;
 }
 

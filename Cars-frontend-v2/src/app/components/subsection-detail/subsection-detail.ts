@@ -5,7 +5,8 @@ import { Subject, takeUntil } from 'rxjs';
 import { RequestService } from '../../services/request';
 import { DocumentEditor } from '../document-editor/document-editor';
 import { QuillEditor } from '../quill-editor/quill-editor';
-import { Comments } from "../comments/comments";
+import { Comments } from '../comments/comments';
+import { AuthService } from '../../services/auth';
 
 @Component({
   selector: 'app-subsection-detail',
@@ -29,26 +30,48 @@ export class SubsectionDetail implements OnInit, OnDestroy {
   currentRequestId: string | null = null;
   currentSectionId: string | null = null;
   currentSubsectionId: string | null = null;
+  sectionName!: string;
+  subsectionName!: string;
+
+  canEdit: boolean = false;  // 🔹 controls edit mode
+
 
   private destroy$ = new Subject<void>();
 
   constructor(
     private route: ActivatedRoute,
-    private requestService: RequestService
+    private requestService: RequestService,
+    private authService: AuthService
   ) {}
 
-  ngOnInit() {
+   ngOnInit() {
+    // 🔹 React whenever params change
     this.route.paramMap.pipe(takeUntil(this.destroy$)).subscribe((params) => {
-      const requestId = params.get('requestId');
-      const sectionId = params.get('sectionId');
-      const subsectionId = params.get('subsectionId');
-      // if (subsectionId) {
-      //   this.fetchSubSection(subsectionId);
-      // }
-      this.currentRequestId = requestId;
-      this.currentSectionId = sectionId;
-      this.currentSubsectionId = subsectionId;
+      this.currentRequestId = params.get('requestId');
+      this.currentSectionId = params.get('sectionId');
+      this.currentSubsectionId = params.get('subsectionId');
+
+      // Always read latest resolved data for section/subsection names
+      const data = this.route.snapshot.data['subsectionData'];
+      this.sectionName = data?.section ?? null;
+      this.subsectionName = data?.subsection ?? null;
+
+      console.log('Section-ngOninit:', this.sectionName);
+      console.log('Subsection-ngOninit:', this.subsectionName);
+
+      // 🔹 Check permissions whenever section changes
+      this.checkPermissions();
     });
+  }
+
+  private checkPermissions() {
+    const allowedSections = this.authService.getUserSections();
+    console.log('allowedSections', allowedSections)
+    this.canEdit =
+      !!this.sectionName &&
+      allowedSections.includes(this.sectionName.trim());
+
+    console.log('Can Edit:', this.canEdit);
   }
 
   private fetchSubSection(id: string) {

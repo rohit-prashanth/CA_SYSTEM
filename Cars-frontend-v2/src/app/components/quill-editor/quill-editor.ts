@@ -12,6 +12,7 @@ import { CommonModule } from '@angular/common';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { Router, RouterOutlet } from '@angular/router';
 import { SidebarStateService } from '../../shared-services/sidebar-state.service';
+import { AuthService } from '../../services/auth';
 
 @Component({
   selector: 'app-quill-editor',
@@ -30,6 +31,10 @@ export class QuillEditor implements OnInit, OnChanges {
   @Input() requestId!: string | null;
   @Input() sectionId!: string | null;
   @Input() subsectionId!: string | null;
+  @Input() sectionName!: string | null;
+  @Input() canEdit: boolean = false;
+
+  public user_id: number | null = null;
 
   content: string = '<p>Start typing...</p>';
   filename: string = 'test';
@@ -42,10 +47,12 @@ export class QuillEditor implements OnInit, OnChanges {
     private requestService: RequestService,
     private snackBar: MatSnackBar,
     private router: Router,
-    private sidebarState: SidebarStateService
+    private sidebarState: SidebarStateService,
+    public authService: AuthService
   ) {}
 
   ngOnInit() {
+    this.user_id = this.authService.rowId;
     this.loadDocument();
   }
 
@@ -81,6 +88,9 @@ export class QuillEditor implements OnInit, OnChanges {
   // Quill editor instance hook
   onEditorCreated(quill: any) {
     this.quill = quill;
+
+    // Set editor to read-only if not allowed
+    this.quill.enable(this.canEdit);
 
     // If content was already loaded
     if (this.content) {
@@ -157,24 +167,28 @@ export class QuillEditor implements OnInit, OnChanges {
     // Get full HTML including colors, background, code blocks
     const html = this.quill.root.innerHTML;
 
-    this.requestService.exportDocument(this.filename, html).subscribe({
-      next: () => {
-        this.snackBar.open('Document saved successfully!', 'Close', {
-          duration: 3000,
-          horizontalPosition: 'right',
-          verticalPosition: 'bottom',
-          panelClass: ['snackbar-success'],
-        });
-      },
-      error: () => {
-        this.snackBar.open('Failed to save document!', 'Close', {
-          duration: 3000,
-          horizontalPosition: 'right',
-          verticalPosition: 'bottom',
-          panelClass: ['snackbar-error'],
-        });
-      },
-    });
+    this.requestService
+      .exportDocument(this.user_id, this.sectionName, this.filename, html)
+      .subscribe({
+        next: (res) => {
+          this.snackBar.open('Document saved successfully!', 'Close', {
+            duration: 3000,
+            horizontalPosition: 'right',
+            verticalPosition: 'bottom',
+            panelClass: ['snackbar-success'],
+          });
+        },
+        error: (err) => {
+          // Use backend message if present
+          const message = err?.error?.message || 'Failed to save document!';
+          this.snackBar.open(message, 'Close', {
+            duration: 3000,
+            horizontalPosition: 'right',
+            verticalPosition: 'bottom',
+            panelClass: ['snackbar-error'],
+          });
+        },
+      });
   }
 
   cancelDoc() {

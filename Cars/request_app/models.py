@@ -1,6 +1,73 @@
 from django.db import models
 from django.utils import timezone
 
+
+class CCBUsers(models.Model):
+    row_id = models.AutoField(primary_key=True)
+    user_name = models.CharField(max_length=50)
+    ad_login = models.CharField(max_length=20, unique=True)
+    email = models.CharField(max_length=50)
+    is_active = models.BooleanField(default=False)
+
+    # Many-to-Many with Roles through the join table
+    roles = models.ManyToManyField(
+        "CCBRoles",
+        through="CCBRoleUserJoin",
+        related_name="users"
+    )
+
+    class Meta:
+        db_table = "CCBUsers"
+
+    def __str__(self):
+        return self.user_name
+
+
+class CCBRoles(models.Model):
+    row_id = models.AutoField(primary_key=True)
+    role_description = models.CharField(max_length=50)
+    is_active = models.BooleanField(default=False)
+
+    # reverse M2M comes automatically from `related_name="users"`
+    # So you can do: my_role.users.all()
+
+    class Meta:
+        db_table = "CCBRoles"
+
+    def __str__(self):
+        return self.role_description
+
+
+class CCBRoleUserJoin(models.Model):
+    row_id = models.AutoField(primary_key=True)
+
+    user = models.ForeignKey(
+        "CCBUsers",
+        on_delete=models.CASCADE,
+        db_column="UserID",
+        related_name="role_user_joins",
+    )
+
+    role = models.ForeignKey(
+        "CCBRoles",
+        on_delete=models.CASCADE,
+        db_column="RoleID",
+        related_name="role_user_joins",
+    )
+
+    access = models.CharField(
+        max_length=1, null=True, blank=True
+    )  # 'A' = Add, 'M' = Modify
+    is_active = models.BooleanField(default=False)
+
+    class Meta:
+        db_table = "CCBRoleUserJoin"
+        managed = True
+
+    def __str__(self):
+        return f"{self.user} - {self.role} ({self.access})"
+
+
 class CCBRequests(models.Model):
     row_id = models.AutoField(primary_key=True)
     change_title = models.CharField(max_length=50)
@@ -144,19 +211,6 @@ class CCBClassification(models.Model):
         return self.classification
 
 
-class CCBUsers(models.Model):
-    row_id = models.AutoField(primary_key=True)
-    user_name = models.CharField(max_length=50)
-    ad_login = models.CharField(max_length=20, unique=True)
-    email = models.CharField(max_length=50)
-    is_active = models.BooleanField(default=False)
-
-    class Meta:
-        db_table = "CCBUsers"
-
-    def __str__(self):
-        return self.user_name
-
 
 class CCBDecisions(models.Model):
     row_id = models.AutoField(primary_key=True)
@@ -198,10 +252,19 @@ class CCBSections(models.Model):
     row_id = models.AutoField(primary_key=True)
     sequence = models.SmallIntegerField(null=True, blank=True)
     section_name = models.CharField(max_length=50)
-    section_role_update = models.ForeignKey(
-        "CCBRoles", on_delete=models.SET_NULL, null=True, db_column="SectionRoleUpdate"
-    )
+
+    # section_role_update = models.ForeignKey(
+    #     "CCBRoles", on_delete=models.SET_NULL, null=True, db_column="SectionRoleUpdate"
+    # )
     is_active = models.BooleanField(default=True)
+
+    # Many-to-Many relationship through a join table
+    roles = models.ManyToManyField(
+        "CCBRoles",
+        through="CCBSectionRoles",
+        related_name="sections"
+    )
+
 
     class Meta:
         db_table = "CCBSections"
@@ -209,17 +272,22 @@ class CCBSections(models.Model):
     def __str__(self):
         return self.section_name
 
+    
 
-class CCBRoles(models.Model):
+class CCBSectionRoles(models.Model):
+    """Join Table between Sections and Roles"""
     row_id = models.AutoField(primary_key=True)
-    role_description = models.CharField(max_length=50)
-    is_active = models.BooleanField(default=False)
+    section = models.ForeignKey(CCBSections, on_delete=models.CASCADE, db_column="SectionId")
+    role = models.ForeignKey(CCBRoles, on_delete=models.CASCADE, db_column="RoleId")
+    assigned_at = models.DateTimeField(auto_now_add=True)  # optional audit field
+    is_active = models.BooleanField(default=True)
 
     class Meta:
-        db_table = "CCBRoles"
+        db_table = "CCBSectionRoles"
+        unique_together = ("section", "role")  # prevent duplicates
 
     def __str__(self):
-        return self.role_description
+        return f"{self.section.section_name} ↔ {self.role.role_description}"
 
 
 class CCBSubSections(models.Model):
@@ -277,36 +345,6 @@ class CCBRequestSubSectionJoin(models.Model):
 
     def __str__(self):
         return f"Request {self.request_id} - Section {self.section_id} - SubSection {self.sub_section_id}"
-
-
-class CCBRoleUserJoin(models.Model):
-    row_id = models.AutoField(primary_key=True)
-
-    user = models.ForeignKey(
-        "CCBUsers",
-        on_delete=models.CASCADE,
-        db_column="UserID",
-        related_name="role_user_joins",
-    )
-
-    role = models.ForeignKey(
-        "CCBRoles",
-        on_delete=models.CASCADE,
-        db_column="RoleID",
-        related_name="role_user_joins",
-    )
-
-    access = models.CharField(
-        max_length=1, null=True, blank=True
-    )  # 'A' = Add, 'M' = Modify
-    is_active = models.BooleanField(default=False)
-
-    class Meta:
-        db_table = "CCBRoleUserJoin"
-        managed = True
-
-    def __str__(self):
-        return f"{self.user} - {self.role} ({self.access})"
 
 
 

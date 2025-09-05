@@ -1,17 +1,14 @@
 // src/app/services/request.service.ts
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import { map, Observable } from 'rxjs';
 import { environment } from '../../environments/environment';
-
-
 
 @Injectable({
   providedIn: 'root',
 })
 export class RequestService {
   private requestapiUrl = `${environment.apiBaseUrl}/api/requests`;
-  
 
   constructor(private http: HttpClient) {}
 
@@ -27,6 +24,28 @@ export class RequestService {
     }
 
     return this.http.get(url);
+  }
+
+  // Get request friendly name
+  getRequestName(requestId: string): Observable<string> {
+    return this.http
+      .get<{ name: string }>(`${this.requestapiUrl}/${requestId}/name/`)
+      .pipe(map((res) => res.name));
+  }
+
+  // // Get section › subsection friendly name
+  // getSectionOrSubsectionName(sectionId: string, subsectionId: string): Observable<string> {
+  //   return this.http.get<{ name: string }>(
+  //     `${this.requestapiUrl}/sections/${sectionId}/subsections/${subsectionId}/name/`
+  //   ).pipe(map(res => res.name));
+  // }
+  getSectionOrSubsectionName(
+    sectionId: string,
+    subsectionId: string
+  ): Observable<{ section: string; subsection: string }> {
+    return this.http.get<{ section: string; subsection: string }>(
+      `${this.requestapiUrl}/sections/${sectionId}/subsections/${subsectionId}/name/`
+    );
   }
 
   getItVerticals(): Observable<any> {
@@ -54,14 +73,21 @@ export class RequestService {
   }
 
   readDocument(): Observable<any> {
-    return this.http.get(`${this.requestapiUrl}/ccb-docx/`,{ responseType: 'blob' });
+    return this.http.get(`${this.requestapiUrl}/ccb-docx/`, {
+      responseType: 'blob',
+    });
   }
 
   importDocument(filename: string): Observable<any> {
     return this.http.get(`${this.requestapiUrl}/import/${filename}/`);
   }
 
-  exportDocument(filename: string, html: string): Observable<any> {
-    return this.http.post(`${this.requestapiUrl}/export/`, { filename, html });
+  exportDocument(
+    user_id: number | null,
+    sectionName: string | null,
+    filename: string,
+    html: string
+  ): Observable<any> {
+    return this.http.post(`${this.requestapiUrl}/export/`, { filename, html, user_id, sectionName });
   }
 }

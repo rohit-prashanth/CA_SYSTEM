@@ -13,16 +13,17 @@ export class AttachmentService {
   constructor(private http: HttpClient) {}
 
   // Upload file
-  uploadAttachment(file: File, fileName: string): Observable<any> {
+  uploadAttachment(file: File, fileName: string, postId: string): Observable<any> {
     const formData = new FormData();
     formData.append('file', file);
     formData.append('file_name', fileName);
+    formData.append('post_id', postId);
     return this.http.post(`${this.apiUrl}/attachments/upload/`, formData);
   }
 
   // Get all attachments
-  getAttachments(): Observable<any[]> {
-    return this.http.get<any[]>(`${this.apiUrl}/attachments/`);
+  getAttachments(postId:string): Observable<any[]> {
+    return this.http.get<any[]>(`${this.apiUrl}/attachments/${postId}`);
   }
 
   // Get single attachment by ID (optional, if you want direct preview link)

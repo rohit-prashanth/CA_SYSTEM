@@ -5,7 +5,7 @@ from django.shortcuts import render
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
-
+from zoneinfo import ZoneInfo
 from request_app.models import CCBUsers
 
 from .mongo_models import Attachment, CCBComments, CCBAttachments, Comment
@@ -43,16 +43,22 @@ class CommentListCreateAPIView(APIView):
         users = CCBUsers.objects.filter(row_id__in=list(user_ids)).only("row_id", "user_name")
         user_map = {u.row_id: u.user_name for u in users}
 
+         # --- set your local timezone ---
+        local_tz = ZoneInfo("Asia/Kolkata")
 
         # 3. Build tree with usernames injected
         def build_comment_tree(comment):
+            # convert UTC -> local time
+            utc_time = comment.created_at.replace(tzinfo=ZoneInfo("UTC"))
+            local_time = utc_time.astimezone(local_tz)
             data = {
                 "id": str(comment.id),
                 "post_id": comment.post_id,
                 "user_id": comment.user_id,
                 "user_name": user_map.get(comment.user_id, "Unknown User"),
                 "text": comment.text,
-                "created_at": comment.created_at,
+                 # 12-hour format with AM/PM
+                "created_at": local_time.strftime("%Y-%m-%d %I:%M %p"),
                 "likes": getattr(comment, "likes", []),
                 "dislikes": getattr(comment, "dislikes", []),
                 "replies": [],
@@ -67,6 +73,11 @@ class CommentListCreateAPIView(APIView):
     def post(self, request, post_id):
         data = request.data.copy()
         data["post_id"] = post_id
+        try:
+            username = CCBUsers.objects.get(row_id=data["user_id"]).user_name
+        except CCBUsers.DoesNotExist:
+            return Response(status=status.HTTP_404_NOT_FOUND)
+        data["user_name"] = username
         serializer = CommentSerializer(data=data)
         if serializer.is_valid():
             serializer.save()
@@ -143,6 +154,7 @@ class AttachmentUploadView(APIView):
         if serializer.is_valid():
             file = serializer.validated_data['file']
             display_name = serializer.validated_data['file_name']
+            post_id = serializer.validated_data['post_id']
 
             # Create safe file name: uuid + original extension
             ext = os.path.splitext(file.name)[1]  # e.g. ".pdf"
@@ -159,7 +171,8 @@ class AttachmentUploadView(APIView):
             attachment = Attachment(
                 file_name=display_name,   # user-chosen name
                 file_path=file_url,  # URL path
-                file_type=file.content_type
+                file_type=file.content_type,
+                post_id=post_id
             )
             attachment.save()
 
@@ -167,15 +180,16 @@ class AttachmentUploadView(APIView):
                 "message": "File uploaded successfully",
                 "id": str(attachment.id),
                 "file_name": display_name,
-                "file_path": attachment.file_path
+                "file_path": attachment.file_path,
+                "post_id":post_id
             }, status=status.HTTP_201_CREATED)
 
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
 class AttachmentListView(APIView):
-    def get(self, request):
-        attachments = Attachment.objects()
+    def get(self, request, post_id):
+        attachments = Attachment.objects(post_id=post_id)
         data = []
         for a in attachments:
             data.append(

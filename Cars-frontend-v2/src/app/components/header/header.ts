@@ -1,11 +1,12 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { AuthService } from '../../services/auth';
+import { Breadcrumb } from "../breadcrumb/breadcrumb";
 
 @Component({
   selector: 'app-header',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, Breadcrumb],
   templateUrl: './header.html',
   styleUrls: ['./header.css'],
 })

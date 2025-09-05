@@ -40,7 +40,8 @@ class Comment(Document):
     post_id = StringField(
         required=True
     )  # ID of the post/article this comment belongs to
-    user_id = IntField() 
+    user_id = IntField()
+    user_name = StringField()
     parent = ReferenceField("self", null=True)  # allows nesting
     text = StringField(required=True)
     likes = ListField(IntField(), default=list)  # store user_ids who liked
@@ -52,6 +53,9 @@ class Comment(Document):
 
 
 class Attachment(Document):
+    post_id = StringField(
+        required=True
+    )  # ID of the post/article this comment belongs to
     file_name = StringField(required=True)   # User-provided name
     file_path = StringField(required=True)   # Local file system path
     file_type = StringField()                # MIME type / extension

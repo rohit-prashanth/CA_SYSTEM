@@ -21,7 +21,7 @@ class CommentSerializer(serializers.Serializer):
     created_at = serializers.DateTimeField(read_only=True)
     updated_at = serializers.DateTimeField(read_only=True)
     replies = RecursiveField(many=True, read_only=True)
-
+    user_name = serializers.CharField()
     likes = serializers.ListField(child=serializers.CharField(), read_only=True)
     dislikes = serializers.ListField(child=serializers.CharField(), read_only=True)
 
@@ -63,7 +63,7 @@ class CCBCommentsSerializer(serializers.Serializer):
 class AttachmentSerializer(serializers.Serializer):
     file = serializers.FileField()
     file_name = serializers.CharField(max_length=255)
-
+    post_id = serializers.CharField()
 
 class CCBAttachmentsSerializer(serializers.Serializer):
     id = serializers.CharField(read_only=True)

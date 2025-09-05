@@ -1,5 +1,33 @@
 <div class="editor-container">
-  <!-- Quill Editor with toolbar -->
+  <div class="editor-wrapper" [class.readonly]="!canEdit">
+    <quill-editor
+      [(ngModel)]="content"
+      class="custom-quill"
+      [readOnly]="!canEdit"
+      (onEditorCreated)="onEditorCreated($event)"
+    >
+    </quill-editor>
+  </div>
+
+  <div *ngIf="message" class="alert" [ngClass]="messageType">
+    {{ message }}
+  </div>
+</div>
+
+<div class="button-container">
+  <button *ngIf="canEdit" (click)="saveDoc()" class="btn custom-button">
+    Save
+  </button>
+  <button (click)="cancelDoc()" class="btn custom-cancel-button">
+    Cancel
+  </button>
+</div>
+
+
+
+
+<!-- <div class="editor-container">
+  Quill Editor with toolbar
   <div class="editor-wrapper">
     <quill-editor
       [(ngModel)]="content"
@@ -9,7 +37,7 @@
     </quill-editor>
   </div>
   
-  <!-- Success/Error Messages -->
+  Success/Error Messages
   <div *ngIf="message" class="alert" [ngClass]="messageType">
     {{ message }}
   </div>
@@ -17,10 +45,10 @@
   <router-outlet></router-outlet>
 </div>
 
-<!-- Top Action Bar -->
+Top Action Bar
   <div class="button-container">
     <button (click)="saveDoc()" class="btn custom-button">Save</button>
     <button (click)="cancelDoc()" class="btn custom-cancel-button">
       Cancel
     </button>
-  </div>
+  </div> -->

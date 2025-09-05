@@ -164,7 +164,7 @@ button.custom-button {
 }
 
 button.custom-button:hover {
-  background-color: #81b8f0;
+  background-color: #0077ff;
   color: white;
 }
 
@@ -189,4 +189,20 @@ button.custom-cancel-button:hover {
 .button-container {
   justify-content: flex-end;
   display: flex;
+}
+
+.editor-wrapper.readonly ::ng-deep .ql-editor {
+  background-color: #f5f5f5; /* gray out */
+  user-select: text;          /* allow text selection */
+  pointer-events: auto;       /* enable scroll */
+  cursor: not-allowed;        /* optional: show "cannot edit" cursor */
+}
+
+/* Disable editing by Quill itself */
+::ng-deep .ql-editor[contenteditable="true"]:not([readonly]) {
+  cursor: text;
+}
+
+.editor-wrapper.readonly ::ng-deep .ql-editor p {
+  color: #555; /* optional: make text a little lighter */
 }

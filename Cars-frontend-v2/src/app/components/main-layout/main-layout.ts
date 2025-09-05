@@ -9,11 +9,12 @@ import {
 } from '@angular/router';
 import { AuthService } from '../../services/auth';
 import { CommonModule } from '@angular/common';
+import { Breadcrumb } from "../breadcrumb/breadcrumb";
 
 @Component({
   selector: 'app-main-layout',
   standalone: true,
-  imports: [RouterOutlet, RouterLink, RouterLinkActive, CommonModule],
+  imports: [RouterOutlet, RouterLink, RouterLinkActive, CommonModule, Breadcrumb],
   templateUrl: './main-layout.html',
   styleUrl: './main-layout.css',
 })
@@ -82,7 +83,8 @@ export class MainLayout implements OnInit {
             res.user.email,
             res.user.loginId,
             res.user.fullName,
-            res.user.rowId
+            res.user.rowId,
+            res.user.roles
           );
 
           this.loading = false; // hide loader

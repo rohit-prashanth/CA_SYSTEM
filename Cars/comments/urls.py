@@ -31,7 +31,7 @@ urlpatterns = [
         name="comment-like-dislike",
     ),
     path("attachments/upload/", AttachmentUploadView.as_view(), name="attachment-upload"),
-    path("attachments/", AttachmentListView.as_view(), name="attachment-list")
+    path("attachments/<str:post_id>", AttachmentListView.as_view(), name="attachment-list")
 ]
 
 

@@ -29,7 +29,8 @@ export class ViewRequest implements OnInit {
     sectionId: number;
     subsectionId: number;
   } | null = null;
-
+  sidebarCollapsed = false; // Sidebar starts expanded
+  showIllustration = true; // controls illustration visibility
   constructor(
     private http: HttpClient,
     private requestService: RequestService,
@@ -39,64 +40,87 @@ export class ViewRequest implements OnInit {
   ) {}
 
   ngOnInit() {
-    this.route.firstChild?.paramMap.subscribe((params) => {
-      const requestId = Number(params.get('requestId'));
-      const sectionId = Number(params.get('sectionId'));
-      const subsectionId = Number(params.get('subsectionId'));
-      
-      if (requestId) {
-        this.fetchRequests(() => {
-          console.log('Child params:', requestId, sectionId, subsectionId);
-          this.restoreSidebarState(requestId, sectionId, subsectionId);
-        });
-      }
-    });
+    console.log('ngOnInit');
 
+    // ✅ Case 1: Handle initial load immediately
+    this.processRouteParams();
+
+    // ✅ Case 2: Handle future navigations
+    this.router.events
+      .pipe(filter((event) => event instanceof NavigationEnd))
+      .subscribe(() => {
+        console.log('NavigationEnd fired');
+        this.processRouteParams();
+        this.toggleIllustration();
+      });
+
+    // On initial load
+    this.toggleIllustration();
+    // Listen to external sidebar reset events
     this.sidebarState.resetState$.subscribe((reqId) => {
-      if (reqId) {
-        this.resetSidebarState(reqId);
+      if (reqId) this.resetSidebarState(reqId);
+    });
+  }
+
+  private processRouteParams() {
+    let route = this.route;
+    // Go to the deepest child route
+    while (route.firstChild) {
+      route = route.firstChild;
+    }
+
+    console.log('processRouteParams');
+
+    const params = route.snapshot.paramMap;
+    const requestId = Number(params.get('requestId'));
+    const sectionId = Number(params.get('sectionId'));
+    const subsectionId = Number(params.get('subsectionId'));
+
+    // Fetch all requests first
+    this.fetchRequests(() => {
+      console.log('fetchRequests finished in processRouteParams');
+      if (requestId) {
+        this.restoreSidebarState(requestId, sectionId, subsectionId);
+      } else {
+        // No requestId → collapse everything
+        this.requests = this.requests.map((req) => ({
+          ...req,
+          active: false,
+          expanded: false,
+          sections: req.sections.map((sec) => ({
+            ...sec,
+            active: false,
+            expanded: false,
+            children: sec.children.map((sub) => ({ ...sub, active: false })),
+          })),
+        }));
       }
     });
   }
 
-  sidebarCollapsed = false; // Sidebar starts expanded
+  // toggleIllustration(){
+  //   // If child route exists, hide illustration
+  //   this.showIllustration = !this.route.firstChild?.snapshot.routeConfig;
+  // }
+
+  private toggleIllustration(): void {
+    let child = this.route.firstChild;
+    while (child?.firstChild) {
+      child = child.firstChild;
+    }
+
+    // Show illustration only when the empty path child is active
+    this.showIllustration = child?.routeConfig?.path === '';
+  }
+
   // Toggle method
   toggleSidebar() {
     this.sidebarCollapsed = !this.sidebarCollapsed;
   }
 
-  // fetchRequests() {
-  //   this.requestService.getCCBRequests().subscribe({
-  //     next: (res: any[]) => {
-  //       this.requests = res.map((req) => ({
-  //         id: req.row_id,
-  //         name: req.change_title,
-  //         status: req.change_status,
-  //         expanded: false,
-  //         // map API sections/subsections, adding expanded/active flags for UI
-  //         sections: (req.sections || []).map((section: any) => ({
-  //           id: section.row_id,
-  //           name: section.section_name,
-  //           expanded: false,
-  //           active: false,
-  //           children: (section.subsections || []).map((subsection: any) => ({
-  //             id: subsection.row_id,
-  //             name: subsection.sub_section_name,
-  //             active: false,
-  //             content: subsection.content,
-  //             isActive: subsection.is_active,
-  //           })),
-  //         })),
-  //       }));
-  //       // this.breadcrumbs = this.buildBreadcrumbs();
-  //     },
-  //     error: (err) => {
-  //       console.error('Failed to load requests', err);
-  //     },
-  //   });
-  // }
-
   fetchRequests(callback?: () => void) {
+    console.log('fetchRequest');
+
     this.requestService.getCCBRequests().subscribe({
       next: (res: any[]) => {
         this.requests = res.map((req) => ({
@@ -209,6 +233,10 @@ export class ViewRequest implements OnInit {
   }
 
   toggleRequest(request: RequestItem) {
+    // ✅ Ensure sidebar is open if collapsed
+    if (this.sidebarCollapsed) {
+      this.sidebarCollapsed = false;
+    }
     if (request.expanded) {
       this.requests = this.requests.map((req) => {
         if (req.id === request.id) {

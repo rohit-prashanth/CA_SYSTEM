@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Output, OnInit  } from '@angular/core';
+import { Component, EventEmitter, Output, OnInit, Input  } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
@@ -17,8 +17,21 @@ export interface Attachment {
   imports: [CommonModule, FormsModule],
   templateUrl: './attachment-upload.html',
   styleUrl: './attachment-upload.css',
+  standalone: true,
 })
 export class AttachmentUpload implements OnInit{
+  private _postId!: string;
+
+  @Input() set postId(value: string) {
+    if (value && value !== this._postId) {
+      this._postId = value;
+      this.loadAttachments(); // ✅ reload whenever postId changes
+    }
+  }
+  get postId(): string {
+    return this._postId;
+  }
+  
   attachments: Attachment[] = []; // ✅ now typed to match Mongo schema
   pendingFile: File | null = null;
   pendingName: string = '';
@@ -34,11 +47,11 @@ export class AttachmentUpload implements OnInit{
   ) {}
 
   ngOnInit() {
-    this.loadAttachments();
+    // this.loadAttachments();
   }
 
   loadAttachments() {
-    this.attachmentService.getAttachments().subscribe({
+    this.attachmentService.getAttachments(this.postId).subscribe({
       next: (data) => {
         this.attachments = data.map((doc: any) => ({
           id: doc._id,
@@ -55,7 +68,7 @@ export class AttachmentUpload implements OnInit{
   confirmAdd() {
     if (this.pendingFile && this.pendingName.trim()) {
       this.attachmentService
-        .uploadAttachment(this.pendingFile, this.pendingName)
+        .uploadAttachment(this.pendingFile, this.pendingName, this.postId)
         .subscribe({
           next: () => {
             this.pendingFile = null;

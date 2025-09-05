@@ -83,7 +83,6 @@ export class Comments implements OnInit, OnChanges {
       this.comments.unshift(res);
       this.newComment = '';
     });
-    this.loadComments();
   }
 
   // addComment() {

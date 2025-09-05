@@ -12,6 +12,8 @@ from .views import (
     CCBStatusViewSet,
     UploadDocView,
     CheckUserAPI,
+    RequestNameView,
+    SectionSubsectionNameView,
     import_doc,
     export_doc
 )
@@ -35,6 +37,10 @@ urlpatterns = [
     path("ccb-docx/", UploadDocView.as_view(), name="ccb-docx"),
     path("import/<str:filename>/", import_doc, name="import_doc"),
     path("export/", export_doc, name="export_doc"),
+    path('<str:request_id>/name/', RequestNameView.as_view(), name='request-name'),
+    path('sections/<str:section_id>/subsections/<str:subsection_id>/name/',
+         SectionSubsectionNameView.as_view(),
+         name='section-subsection-name'),
 ]
     
 

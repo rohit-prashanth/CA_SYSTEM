@@ -103,6 +103,9 @@
 
   <!-- Main content area -->
   <main class="main-content" [class.full-width]="sidebarCollapsed">
+    <div class="illustration-container" *ngIf="showIllustration">
+      <img src="assets/icons/work_in_progress.svg" alt="Illustration" />
+    </div>
     <router-outlet></router-outlet>
   </main>
 </div>

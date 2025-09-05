@@ -1,37 +1,35 @@
 .custom-header {
   background-color: #e6f0fa;
-  color: white;
   padding: 0.5rem 1rem;
   display: flex;
   align-items: center;
-  justify-content: space-between; /* 👈 changed from flex-start */
+  justify-content: space-between;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  height: 32px;
+  height: 40px; /* slightly taller for better alignment */
 }
 
 .logo-title {
-  font-size: 11px; /* Change text size */
-  font-weight: bolder; /* Make it bold */
-  color: #444; /* Dark gray text color */
-  letter-spacing: 2px; /* Spacing between letters */
-  text-transform: uppercase; /* Make text uppercase */
-  margin: 0; /* Remove default margin */
-  padding-top: 0px; /* Adjust vertical alignment */
-  /* font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif; */
+  font-size: 11px;
+  font-weight: bolder;
+  color: #444;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  margin: 0;
+  padding-top: 2px; /* better vertical alignment */
 }
 
 .logo-icon {
   height: 28px;
   width: 80px;
   margin-right: 1rem;
-  transform: scale(1.7);
+  transform: scale(1.4);
   transition: transform 0.3s ease;
-  padding: 4px;
+  padding: 2px;
   object-fit: contain;
 }
 
 .logo-icon:hover {
-  transform: scale(1.8);
+  transform: scale(1.5);
   transition: transform 0.3s ease;
 }
 
@@ -41,20 +39,29 @@
 }
 
 .user-container {
-  margin-left: auto; /* push to right */
+  margin-left: auto;
   display: flex;
-  align-items: bottom;
-  gap: 6px; /* spacing between name and date/time */
+  flex-direction: column; /* stack name above datetime */
+  align-items: flex-end;
+  gap: 2px;
 }
 
 .user-name {
-  font-size: 16px;
+  font-size: 14px;
   font-weight: bold;
   color: #222;
+  line-height: 1;
 }
 
 .date-time {
   font-size: 10px;
   color: #666;
-  align-content: center;
+  line-height: 1;
 }
+
+/* .breadcrumb-navbar {
+  background-color: #f9f9f9;
+  padding: 0.1rem 1rem;
+  border-bottom: 1px solid #ddd;
+  font-size: 12px;
+} */

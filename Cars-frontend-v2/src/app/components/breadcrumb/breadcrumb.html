@@ -1,32 +1,61 @@
-<!-- src/app/components/breadcrumb/breadcrumb.html -->
-<!-- <nav class="breadcrumb">
-  @for (crumb of breadcrumbs; track crumb) {
-    <a (click)="navigateTo(crumb.url)">{{ crumb.label }}</a>
-    @if (!$last) {
-      <span class="divider"> / </span>
-    }
-  }
-</nav> -->
+<nav *ngIf="breadcrumbService.breadcrumbs$ | async as breadcrumbs"
+         class="breadcrumb-container">
+      <ng-container *ngFor="let breadcrumb of breadcrumbs; let last = last; let i = index">
+        
+        <!-- First breadcrumb (Home icon) -->
+        <ng-container *ngIf="i === 0">
+          <span *ngIf="isCurrentUrl(breadcrumb.url)" class="breadcrumb-current">
+            <i class="fas fa-home"></i> 
+            <!-- {{ breadcrumb.label }} -->
+          </span>
+          <a *ngIf="!isCurrentUrl(breadcrumb.url)" [routerLink]="breadcrumb.url" class="breadcrumb-link">
+            <i class="fas fa-home"></i> 
+            <!-- {{ breadcrumb.label }} -->
+          </a>
+        </ng-container>
 
-<!-- <nav class="breadcrumb-container">
-  <ng-container *ngFor="let breadcrumb of breadcrumbs; let last = last">
-    <a
-      *ngIf="!last"
-      (click)="navigateTo(breadcrumb.url)"
-      class="breadcrumb-link"
-    >
+        <!-- Middle breadcrumbs -->
+        <ng-container *ngIf="i !== 0 && !last">
+          <span *ngIf="isCurrentUrl(breadcrumb.url) || !breadcrumb.url" class="breadcrumb-label">
+            {{ breadcrumb.label }}
+          </span>
+          <a *ngIf="!isCurrentUrl(breadcrumb.url) && breadcrumb.url" [routerLink]="breadcrumb.url" class="breadcrumb-link">
+            {{ breadcrumb.label }}
+          </a>
+        </ng-container>
+
+        <!-- Last breadcrumb -->
+        <span *ngIf="last" class="breadcrumb-current">
+          {{ breadcrumb.label }}
+        </span>
+
+        <!-- Separator -->
+        <i *ngIf="!last" class="fas fa-chevron-right breadcrumb-separator"></i>
+      </ng-container>
+    </nav>
+
+
+
+<!-- <nav
+  *ngIf="breadcrumbService.breadcrumbs$ | async as breadcrumbs"
+  class="breadcrumb-container"
+>
+  <ng-container *ngFor="let breadcrumb of breadcrumbs; let last = last; let i = index">
+    Optional Home icon for first breadcrumb
+    <a *ngIf="i === 0 && breadcrumb.url" [routerLink]="breadcrumb.url" class="breadcrumb-link">
+      <i class="fas fa-home"> </i> {{breadcrumb.label}}
+    </a>
+
+    Normal breadcrumb links
+    <a *ngIf="!last && i !== 0 && breadcrumb.url" [routerLink]="breadcrumb.url" class="breadcrumb-link">
       {{ breadcrumb.label }}
     </a>
+    <span *ngIf="!last && !breadcrumb.url && i !== 0" class="breadcrumb-label">
+      {{ breadcrumb.label }}
+    </span>
     <span *ngIf="last" class="breadcrumb-current">{{ breadcrumb.label }}</span>
-    <span *ngIf="!last" class="breadcrumb-separator">/</span>
+
+    Separator (FontAwesome icon)
+    <i *ngIf="!last" class="fas fa-chevron-right breadcrumb-separator"></i>
   </ng-container>
 </nav> -->
-
-
-<nav class="breadcrumb">
-  <ng-container *ngFor="let crumb of breadcrumbs; let last = last">
-    <a *ngIf="!last" (click)="navigateTo(crumb.url)">{{ crumb.label }}</a>
-    <span *ngIf="last">{{ crumb.label }}</span>
-    <span *ngIf="!last"> / </span>
-  </ng-container>
-</nav>
